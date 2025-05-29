@@ -1,4 +1,5 @@
 import { type ReactNode, type JSX } from 'react';
+import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 
 type AppLayoutProps = {
@@ -7,10 +8,12 @@ type AppLayoutProps = {
 
 export default function AppLayout({ children }: AppLayoutProps): JSX.Element {
     return (
-        <html className="scroll-smooth">
-            <body className="relative text-base antialiased">
-                { children }
-            </body>
-        </html>
+        <ClerkProvider>
+            <html className="scroll-smooth">
+                <body className="min-h-dvh relative text-base antialiased">
+                    { children }
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }
