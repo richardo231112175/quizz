@@ -79,7 +79,7 @@ export default function DataTableDemo():JSX.Element {
         VisibilityState,
         React.Dispatch<React.SetStateAction<VisibilityState>>
     ] = React.useState<VisibilityState>({});
-    const [ selectedTipe, setSelectedTipe ] = React.useState<string[]>([]);
+    const [ selectedTipe, setSelectedTipe ]:[string | React.Dispatch.SetStateAction ] = React.useState<string[]>([]);
     const [ dataSource, setDataSource ] = React.useState(data);
     const [ editDialog, setEditDialog ] = React.useState(false);
     const [ deleteDialog, setDeleteDialog ] = React.useState(false);
