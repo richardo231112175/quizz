@@ -79,7 +79,7 @@ export default function DataTableDemo():JSX.Element {
         VisibilityState,
         React.Dispatch<React.SetStateAction<VisibilityState>>
     ] = React.useState<VisibilityState>({});
-    const [ selectedTipe, setSelectedTipe ]:[string | React.Dispatch.SetStateAction ] = React.useState<string[]>([]);
+    const [ selectedTipe, setSelectedTipe ]:[ string[], React.Dispatch<React.SetStateAction<string[]>> ] = React.useState<string[]>([]);
     const [ dataSource, setDataSource ] = React.useState(data);
     const [ editDialog, setEditDialog ] = React.useState(false);
     const [ deleteDialog, setDeleteDialog ] = React.useState(false);
@@ -330,7 +330,7 @@ export default function DataTableDemo():JSX.Element {
                                     <select
                                         value={newTipeInput}
                                         onChange={(e) => {
-                                            const tipe = e.target.value as Payment['tipe'];
+                                            const tipe:string = e.target.value as Payment['tipe'];
                                             setNewTipeInput(tipe);
                                             // Reset opsi saat tipe soal berubah
                                             setPilihanOpsi('');
