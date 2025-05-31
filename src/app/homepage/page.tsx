@@ -7,12 +7,12 @@ import { type JSX } from 'react';
 export default function HomePage():JSX.Element {
     return(
         <main className="p-4 flex flex-col">
-            <div className="bg-blue-100 p-4 rounded">
-                <h3 className="font-bold">Bank Soal Saya</h3>
+            <h3 className="font-bold">Bank Soal Saya</h3>
+            <div className="border-1 border-black p-4">
                 <Table />
             </div>
-            <div className="bg-green-100 p-4 rounded">
-                <h3 className="font-bold">History Penyelesaian</h3>
+            <h3 className="font-bold">History Penyelesaian</h3>
+            <div className="border-1 border-black p-4">
                 <Table />
             </div>
         </main>
