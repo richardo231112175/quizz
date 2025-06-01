@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import { JSX } from 'react';
+import Image from 'next/image';
 
 import {
     ClerkProvider,
+    UserButton,
 } from '@clerk/nextjs';
 import { Geist, Geist_Mono , NextFontWithVariable } from 'next/font/google';
 import './globals.css';
+import { Button } from '@/components/ui/button';
 
 
 
@@ -33,6 +36,14 @@ export default function RootLayout({
         <ClerkProvider>
             <html lang="en">
                 <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                    <header className="flex justify-end items-center p-4 gap-4 h-16 outline-dashed px-15">
+                        <div className="flex items-center flex-1">
+                            <Image src="https://i.pinimg.com/736x/8d/ca/11/8dca11e2f18ddedc934f95cc307ebf8d.jpg" alt="logo icon" width={80} height={80}/>
+                            <p>Quizz...</p>
+                        </div>
+                        <Button className="bg-white text-black border-black border-2 hover:text-white">🏠 Join Room</Button>
+                        <UserButton />
+                    </header>
                     {children}
                 </body>
             </html>
