@@ -2,12 +2,16 @@
 import { Button } from '@/components/ui/button';
 import { type JSX } from 'react';
 import { Plus,UserRound } from 'lucide-react';
+import Link from 'next/link';
 
 
 export default function HomePage():JSX.Element {
     return(
         <main className="p-4 flex flex-col px-15">
-            <h3 className="font-bold">My Quizz</h3>
+            <div className="flex gap-6">
+                <h3 className="font-bold">My Quizz</h3>
+                <Link href="/" className="text-blue-400 hover:underline">View all</Link>
+            </div>
             <div className="border-1 border-black p-4 flex items-center gap-2.5 flex-wrap">
                 <Button className="bg-white w-20 text-black border-black border-2 hover:text-white"> <Plus /> </Button>
                 <Button className="bg-white w-20 text-black border-black border-2 hover:text-white px-3 flex flex-col gap-0">
@@ -101,7 +105,10 @@ export default function HomePage():JSX.Element {
                     </div>
                 </Button>
             </div>
-            <h3 className="font-bold">Completed Quizz</h3>
+            <div className="flex gap-6">
+                <h3 className="font-bold">Completed Quizz</h3>
+                <Link href="/" className="text-blue-400 hover:underline">View all</Link>
+            </div>
             <div className="border-1 border-black p-4 flex items-center gap-2.5 flex-wrap">
                 <Button className="bg-white w-20 h-10 text-black border-black border-2 hover:text-white px-3 flex flex-col gap-0">
                     <div className="w-15 ">
