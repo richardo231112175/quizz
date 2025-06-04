@@ -2,17 +2,9 @@
 
 import { type JSX } from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { Book, Code, FlaskRound as Flask, Globe, HeartPulse, Music, Palette, Trophy, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-
-type Category = {
-    id: string;
-    name: string;
-    icon: LucideIcon;
-    color: string;
-    quizCount: number;
-};
+import { categories } from '@/lib/categories';
 
 export default function CategoriesSection(): JSX.Element {
     const container: Variants = {
@@ -29,65 +21,6 @@ export default function CategoriesSection(): JSX.Element {
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0 },
     };
-
-    const categories: Category[] = [
-        {
-            id: 'science',
-            name: 'Science',
-            icon: Flask,
-            color: 'from-blue-500 to-cyan-400',
-            quizCount: 245,
-        },
-        {
-            id: 'history',
-            name: 'History',
-            icon: Book,
-            color: 'from-amber-500 to-yellow-400',
-            quizCount: 187,
-        },
-        {
-            id: 'geography',
-            name: 'Geography',
-            icon: Globe,
-            color: 'from-emerald-500 to-green-400',
-            quizCount: 163,
-        },
-        {
-            id: 'technology',
-            name: 'Technology',
-            icon: Code,
-            color: 'from-violet-500 to-purple-400',
-            quizCount: 221,
-        },
-        {
-            id: 'arts',
-            name: 'Arts',
-            icon: Palette,
-            color: 'from-pink-500 to-rose-400',
-            quizCount: 132,
-        },
-        {
-            id: 'sports',
-            name: 'Sports',
-            icon: Trophy,
-            color: 'from-orange-500 to-red-400',
-            quizCount: 178,
-        },
-        {
-            id: 'music',
-            name: 'Music',
-            icon: Music,
-            color: 'from-indigo-500 to-blue-400',
-            quizCount: 156,
-        },
-        {
-            id: 'health',
-            name: 'Health',
-            icon: HeartPulse,
-            color: 'from-rose-500 to-pink-400',
-            quizCount: 119,
-        },
-    ];
 
     return (
         <section className="py-16 md:py-24 bg-muted/50">
