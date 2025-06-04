@@ -5,7 +5,7 @@ type configType = {
 };
 
 export default clerkMiddleware(async (auth: ClerkMiddlewareAuth): Promise<void> => {
-    await auth.protect();
+    // await auth.protect();
 });
 
 export const config: configType = {

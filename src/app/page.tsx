@@ -1,7 +1,16 @@
 import { type JSX } from 'react';
+import HeroSection from './_sections/HeroSection';
+import FeaturedQuizzes from './_sections/FeaturedQuizzes';
+import CategoriesSection from './_sections/CategoriesSection';
+import CTASection from './_sections/CTASection';
 
-export default function AppPage(): JSX.Element {
+export default function Home(): JSX.Element {
     return (
-        <h1>Hello World</h1>
+        <>
+            <HeroSection />
+            <FeaturedQuizzes />
+            <CategoriesSection />
+            <CTASection />
+        </>
     );
 }
