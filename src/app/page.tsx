@@ -4,7 +4,7 @@ import FeaturedQuizzes from './_sections/FeaturedQuizzes';
 import CategoriesSection from './_sections/CategoriesSection';
 import CTASection from './_sections/CTASection';
 
-export default function Home(): JSX.Element {
+export default function AppPage(): JSX.Element {
     return (
         <>
             <HeroSection />
