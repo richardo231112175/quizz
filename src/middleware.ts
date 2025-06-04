@@ -1,11 +1,18 @@
-import { clerkMiddleware, type ClerkMiddlewareAuth } from '@clerk/nextjs/server';
+import { NextRequest } from 'next/server';
+import { createRouteMatcher, clerkMiddleware, type ClerkMiddlewareAuth } from '@clerk/nextjs/server';
+
+type routeType = (req: NextRequest) => boolean;
 
 type configType = {
     matcher: string[];
 };
 
-export default clerkMiddleware(async (auth: ClerkMiddlewareAuth): Promise<void> => {
-    // await auth.protect();
+const isProtectedRoute: routeType = createRouteMatcher([ '/my-quizzes(/.*)', '/create', '/quizz(/.*)', '/history' ]);
+
+export default clerkMiddleware(async (auth: ClerkMiddlewareAuth, request: NextRequest): Promise<void> => {
+    if (isProtectedRoute(request)) {
+        await auth.protect();
+    }
 });
 
 export const config: configType = {

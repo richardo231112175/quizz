@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect, type JSX, type Dispatch, type SetStateAction } from 'react';
 import { Menu, X } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, UserButton, useClerk } from '@clerk/nextjs';
+import { useClerk, useAuth, SignedIn, SignedOut, UserButton, SignInButton, SignOutButton } from '@clerk/nextjs';
 import { Button } from '@/components/Button';
 import ThemeToggle from '../ThemeToggle';
 import { cn } from '@/lib/utils';
@@ -11,12 +11,15 @@ import { cn } from '@/lib/utils';
 type navLinkType = {
     href: string;
     label: string;
+    authenticated: boolean;
 };
 
 export default function Navbar(): JSX.Element {
     const [ isMenuOpen, setIsMenuOpen ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ isScrolled, setIsScrolled ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
+
     const { openUserProfile }: ReturnType<typeof useClerk> = useClerk();
+    const { isSignedIn }: ReturnType<typeof useAuth> = useAuth();
 
     useEffect(() => {
         function handleScroll(): void {
@@ -39,10 +42,11 @@ export default function Navbar(): JSX.Element {
     }
 
     const navLinks: navLinkType[] = [
-        { href: '/create', label: 'Create Quiz' },
-        { href: '/browse', label: 'Browse Quizzes' },
-        { href: '/categories', label: 'Categories' },
-        { href: '/about', label: 'About' },
+        ...(isSignedIn ? [ { href: '/my-quizzes', label: 'My Quizzes', authenticated: true } ] : []),
+        { href: '/create', label: 'Create', authenticated: false },
+        { href: '/browse', label: 'Browse', authenticated: false },
+        { href: '/categories', label: 'Categories', authenticated: false },
+        ...(isSignedIn ? [ { href: '/history', label: 'History', authenticated: true } ] : []),
     ];
 
     return (
@@ -91,7 +95,7 @@ export default function Navbar(): JSX.Element {
                 <div className="px-2 pt-2 pb-3 space-y-1 bg-background/95 backdrop-blur-md border-b">
                     <SignedIn>
                         <div onClick={handleProfileClick} tabIndex={0} role="button" className="flex items-center gap-3 px-3 py-2 mb-2 cursor-pointer hover:bg-muted rounded-md transition-colors">
-                            <UserButton appearance={{ elements: { avatarBox: 'w-10 h-10' } }} />
+                            <UserButton appearance={{ elements: { avatarBox: 'w-10 h-10', userButtonTrigger: 'pointer-events-none' } }} />
                             <div className="flex-1">
                                 <p className="text-sm font-medium text-foreground">My Account</p>
                                 <p className="text-xs text-muted-foreground">View profile and settings</p>
@@ -100,10 +104,17 @@ export default function Navbar(): JSX.Element {
                         <div className="h-px bg-border mb-2" />
                     </SignedIn>
                     {navLinks.map((link) => (
-                        <Link key={link.href} onClick={() => setIsMenuOpen(false)} href={link.href} className="block px-3 py-2 rounded-md text-base font-medium text-foreground/80 hover:text-foreground hover:bg-muted transition-colors">
+                        <Link key={link.href} href={link.href} onClick={() => setIsMenuOpen(false)} className="block px-3 py-2 rounded-md text-base font-medium text-foreground/80 hover:text-foreground hover:bg-muted transition-colors">
                             {link.label}
                         </Link>
                     ))}
+                    <SignedIn>
+                        <div className="pt-2 px-3">
+                            <SignOutButton>
+                                <Button variant="secondary" className="w-full">Sign Out</Button>
+                            </SignOutButton>
+                        </div>
+                    </SignedIn>
                     <SignedOut>
                         <div className="pt-2 px-3">
                             <SignInButton>

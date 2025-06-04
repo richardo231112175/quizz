@@ -13,7 +13,7 @@ export default function ClerkProvider({ children }: ClerkProviderProps): JSX.Ele
     const { theme }: UseThemeProps = useTheme();
 
     return (
-        <ClerkProviderComponent appearance={{ baseTheme: theme === 'dark' ? dark : undefined }}>
+        <ClerkProviderComponent afterSignOutUrl="/" appearance={{ baseTheme: theme === 'dark' ? dark : undefined }}>
             {children}
         </ClerkProviderComponent>
     );
