@@ -8,6 +8,7 @@ import { Clock, Star, Users } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { Badge } from '@/components/Badge';
+import { difficulties } from '@/lib/difficulties';
 
 type quizType = {
     id: number;
@@ -19,10 +20,6 @@ type quizType = {
     plays: number;
     rating: number;
     image: string;
-};
-
-type difficultyColorsType = {
-    [key: string]: string;
 };
 
 export default function FeaturedQuizzes(): JSX.Element {
@@ -75,12 +72,6 @@ export default function FeaturedQuizzes(): JSX.Element {
         },
     ];
 
-    const difficultyColors: difficultyColorsType = {
-        'Easy': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-        'Medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-        'Hard': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
-    };
-
     return (
         <section className="py-16 md:py-24">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +100,7 @@ export default function FeaturedQuizzes(): JSX.Element {
                                     <div className="relative h-48 overflow-hidden">
                                         <Image src={quiz.image} alt={quiz.title} fill className="object-cover transition-transform duration-500 ease-in-out" style={{ transform: hoveredIndex === index ? 'scale(1.05)' : 'scale(1)' }} />
                                         <div className="absolute top-2 right-2">
-                                            <Badge className={difficultyColors[quiz.difficulty as keyof typeof difficultyColors]}>
+                                            <Badge className={difficulties[quiz.difficulty as keyof typeof difficulties]}>
                                                 {quiz.difficulty}
                                             </Badge>
                                         </div>

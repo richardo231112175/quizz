@@ -1,6 +1,6 @@
 import { Book, Code, FlaskRound as Flask, Globe, HeartPulse, Music, Palette, Trophy, type LucideIcon } from 'lucide-react';
 
-export type Category = {
+type categoryType = {
     id: string;
     name: string;
     icon: LucideIcon;
@@ -9,7 +9,7 @@ export type Category = {
     quizCount: number;
 };
 
-export const categories: Category[] = [
+export const categories: categoryType[] = [
     {
         id: 'science',
         name: 'Science',
