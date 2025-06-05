@@ -7,7 +7,7 @@ type configType = {
     matcher: string[];
 };
 
-const isProtectedRoute: routeType = createRouteMatcher([ '/my-quizzes(/.*)', '/create', '/quizz(/.*)', '/history' ]);
+const isProtectedRoute: routeType = createRouteMatcher([ '/dashboard(/.*)', '/create', '/quizz(/.*)', '/history' ]);
 
 export default clerkMiddleware(async (auth: ClerkMiddlewareAuth, request: NextRequest): Promise<void> => {
     if (isProtectedRoute(request)) {

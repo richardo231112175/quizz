@@ -42,7 +42,7 @@ export default function Navbar(): JSX.Element {
     }
 
     const navLinks: navLinkType[] = [
-        ...(isSignedIn ? [ { href: '/my-quizzes', label: 'My Quizzes', authenticated: true } ] : []),
+        ...(isSignedIn ? [ { href: '/dashboard', label: 'Dashboard', authenticated: true } ] : []),
         { href: '/create', label: 'Create', authenticated: false },
         { href: '/browse', label: 'Browse', authenticated: false },
         { href: '/categories', label: 'Categories', authenticated: false },
