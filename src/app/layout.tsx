@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function AppLayout({ children }: AppLayoutProps): JSX.Element {
     return (
         <html lang="en" className="scroll-smooth scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40" suppressHydrationWarning>
-            <body className={cn(inter.className, 'min-h-dvh relative text-base antialiased scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40')}>
+            <body className={cn(inter.className, 'min-w-80 min-h-dvh relative text-base antialiased scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40')}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                     <ClerkProvider>
                         <div>

@@ -12,8 +12,92 @@ datasource db {
     directUrl = env("SUPABASE_DIRECT_URL")
 }
 
-model User {
-    id         Int      @id @default(autoincrement())
-    clerk_id   String   @unique
-    created_at DateTime @default(now())
+enum QuizSessionDifficulty {
+    EASY   @map("Easy")
+    MEDIUM @map("Medium")
+    HARD   @map("Hard")
+}
+
+enum QuizSessionCategory {
+    SCIENCE    @map("science")
+    HISTORY    @map("history")
+    GEOGRAPHY  @map("geography")
+    TECHNOLOGY @map("technology")
+    ARTS       @map("arts")
+    SPORTS     @map("sports")
+    MUSIC      @map("music")
+    HEALTH     @map("health")
+}
+
+enum QuizSessionVisibility {
+    PUBLIC  @map("public")
+    PRIVATE @map("private")
+}
+
+enum QuestionType {
+    SINGLE_CHOICE   @map("single_choice")
+    MULTIPLE_CHOICE @map("multiple_choice")
+    OPEN_ENDED      @map("open_ended")
+}
+
+model Quiz {
+    id          Int           @id @default(autoincrement())
+    clerk_id    String
+    title       String        @db.VarChar(100)
+    description String?       @db.Text
+    created_at  DateTime      @default(now())
+
+    sessions    QuizSession[]
+    questions   Question[]
+
+    @@index([clerk_id])
+}
+
+model QuizSession {
+    id              Int                   @id @default(autoincrement())
+    quiz_id         Int
+    title           String                @db.VarChar(100)
+    description     String?               @db.Text
+    image_url       String?               @db.Text
+    difficulty      QuizSessionDifficulty
+    category        QuizSessionCategory
+    time_limit      Int
+    visibility      QuizSessionVisibility @default(PUBLIC)
+    password        String?               @db.VarChar(100)
+    show_answers    Boolean
+    allow_retake    Boolean
+    single_choice   Int
+    multiple_choice Int
+    open_ended      Int
+    open_time       DateTime
+    close_time      DateTime
+    max_retakes     Int?
+    created_at      DateTime              @default(now())
+
+    quiz            Quiz                  @relation(fields: [quiz_id], references: [id])
+
+    @@index([quiz_id])
+    @@index([difficulty])
+    @@index([category])
+    @@index([visibility])
+}
+
+model Question {
+    id                      Int          @id @default(autoincrement())
+    quiz_id                 Int
+    question                String       @db.Text
+    image_url               String?      @db.Text
+    type                    QuestionType
+    time_limit              Int
+    max_score               Int
+    single_choice_options   String?
+    single_choice_correct   String?
+    multiple_choice_options String?
+    multiple_choice_correct String?
+    open_ended_answer_key   String?
+
+    quiz                    Quiz         @relation(fields: [quiz_id], references: [id])
+
+    @@index([quiz_id])
+    @@index([type])
 }
