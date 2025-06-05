@@ -1,26 +1,14 @@
 'use client';
 
-import { type JSX } from 'react';
-import { motion, type Variants } from 'framer-motion';
 import Link from 'next/link';
+import { type JSX } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { categories } from '@/lib/categories';
+import { useCategoriesSection, type useCategoriesSectionType } from './hooks';
 
 export default function CategoriesSection(): JSX.Element {
-    const container: Variants = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-            },
-        },
-    };
-
-    const item: Variants = {
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0 },
-    };
+    const { container, item }: useCategoriesSectionType = useCategoriesSection();
 
     return (
         <section className="py-16 md:py-24 bg-muted/50">

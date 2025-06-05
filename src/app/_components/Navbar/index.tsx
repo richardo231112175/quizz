@@ -1,53 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, type JSX, type Dispatch, type SetStateAction } from 'react';
+import { type JSX } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useClerk, useAuth, SignedIn, SignedOut, UserButton, SignInButton, SignOutButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, SignInButton, SignOutButton } from '@clerk/nextjs';
 import { Button } from '@/components/Button';
 import ThemeToggle from '../ThemeToggle';
 import { cn } from '@/lib/utils';
-
-type navLinkType = {
-    href: string;
-    label: string;
-    authenticated: boolean;
-};
+import { useNavbar, type useNavbarType } from './hooks';
 
 export default function Navbar(): JSX.Element {
-    const [ isMenuOpen, setIsMenuOpen ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
-    const [ isScrolled, setIsScrolled ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
-
-    const { openUserProfile }: ReturnType<typeof useClerk> = useClerk();
-    const { isSignedIn }: ReturnType<typeof useAuth> = useAuth();
-
-    useEffect(() => {
-        function handleScroll(): void {
-            setIsScrolled(window.scrollY > 10);
-        }
-
-        window.addEventListener('scroll', handleScroll);
-
-        return (): void => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-    function toggleMenu(): void {
-        setIsMenuOpen(!isMenuOpen);
-    }
-
-    function handleProfileClick(): void {
-        openUserProfile();
-    }
-
-    const navLinks: navLinkType[] = [
-        ...(isSignedIn ? [ { href: '/dashboard', label: 'Dashboard', authenticated: true } ] : []),
-        { href: '/create', label: 'Create', authenticated: false },
-        { href: '/browse', label: 'Browse', authenticated: false },
-        { href: '/categories', label: 'Categories', authenticated: false },
-        ...(isSignedIn ? [ { href: '/history', label: 'History', authenticated: true } ] : []),
-    ];
+    const { isScrolled, isMenuOpen, setIsMenuOpen, toggleMenu, handleProfileClick, navLinks }: useNavbarType = useNavbar();
 
     return (
         <nav className={cn('fixed w-full z-50 transition-all duration-300', isScrolled ? 'bg-background/95 backdrop-blur-md border-b' : 'bg-transparent')}>
