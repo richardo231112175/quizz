@@ -44,7 +44,7 @@ export default function CategoriesPage(): JSX.Element {
                                         <p className="text-muted-foreground mb-4">{category.description}</p>
                                         <div className="flex items-center justify-between">
                                             <span className="text-sm text-muted-foreground">{category.quizCount} quizzes</span>
-                                            <Button variant="ghost" className="group-hover:translate-x-1 transition-transform duration-300">Explore →</Button>
+                                            <Button variant="ghost" className="group-hover:translate-x-1 transition-transform duration-300 cursor-pointer">Explore →</Button>
                                         </div>
                                     </div>
                                 </motion.div>
