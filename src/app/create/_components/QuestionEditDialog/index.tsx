@@ -1,4 +1,5 @@
-import {  type JSX } from 'react';
+import {  type JSX, type RefObject } from 'react';
+import { useRef } from 'react';
 import { ImagePlus, Plus, Trash2, X } from 'lucide-react';
 import { DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/Dialog';
 import { Label } from '@/components/Label';
@@ -23,6 +24,8 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
         handleMultipleChoiceAnswerChange,
         handleImageDelete,
     }: useQuestionEditDialogType = useQuestionEditDialog({ question });
+
+    const fileInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
 
     return (
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
@@ -70,7 +73,7 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => document.getElementById(`edit-question-image-${localQuestion.id}`)?.click()}
+                            onClick={() => fileInputRef.current?.click()}
                         >
                             <ImagePlus className="h-4 w-4 mr-2" />
                             {localQuestion.image ? 'Change Image' : 'Upload Image'}
@@ -92,7 +95,7 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                         )}
                     </div>
                     <input
-                        id={`edit-question-image-${localQuestion.id}`}
+                        ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         className="hidden"
