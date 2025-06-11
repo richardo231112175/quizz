@@ -118,6 +118,7 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                         <div className="flex justify-between items-center">
                             <Label>Answers</Label>
                             <Button
+                                disabled={localQuestion.answers.length >= 10}
                                 type="button"
                                 variant="outline"
                                 size="sm"

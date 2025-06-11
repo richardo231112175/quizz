@@ -33,7 +33,7 @@ export function useQuestionEditDialog({ question }: useQuestionEditDialogProps):
     function addAnswer(e: MouseEvent<HTMLButtonElement>): void {
         e.preventDefault();
 
-        if (localQuestion.type === 'single_choice' || localQuestion.type === 'multiple_choice') {
+        if (localQuestion.type !== 'open_ended' && localQuestion.answers.length < 10) {
             setLocalQuestion({
                 ...localQuestion,
                 answers: [ ...localQuestion.answers, { id: uuidv4(), text: '', isCorrect: false } ],
