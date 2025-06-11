@@ -12,6 +12,12 @@ datasource db {
     directUrl = env("SUPABASE_DIRECT_URL")
 }
 
+enum QuestionType {
+    SINGLE_CHOICE   @map("single_choice")
+    MULTIPLE_CHOICE @map("multiple_choice")
+    OPEN_ENDED      @map("open_ended")
+}
+
 enum QuizSessionDifficulty {
     EASY   @map("Easy")
     MEDIUM @map("Medium")
@@ -34,12 +40,6 @@ enum QuizSessionVisibility {
     PRIVATE @map("private")
 }
 
-enum QuestionType {
-    SINGLE_CHOICE   @map("single_choice")
-    MULTIPLE_CHOICE @map("multiple_choice")
-    OPEN_ENDED      @map("open_ended")
-}
-
 model Quiz {
     id          Int           @id @default(autoincrement())
     clerk_id    String
@@ -51,35 +51,6 @@ model Quiz {
     questions   Question[]
 
     @@index([clerk_id])
-}
-
-model QuizSession {
-    id              Int                   @id @default(autoincrement())
-    quiz_id         Int
-    title           String                @db.VarChar(100)
-    description     String?               @db.Text
-    image_url       String?               @db.Text
-    difficulty      QuizSessionDifficulty
-    category        QuizSessionCategory
-    time_limit      Int
-    visibility      QuizSessionVisibility @default(PUBLIC)
-    password        String?               @db.VarChar(100)
-    show_answers    Boolean
-    allow_retake    Boolean
-    single_choice   Int
-    multiple_choice Int
-    open_ended      Int
-    open_time       DateTime
-    close_time      DateTime
-    max_retakes     Int?
-    created_at      DateTime              @default(now())
-
-    quiz            Quiz                  @relation(fields: [quiz_id], references: [id])
-
-    @@index([quiz_id])
-    @@index([difficulty])
-    @@index([category])
-    @@index([visibility])
 }
 
 model Question {
@@ -100,4 +71,32 @@ model Question {
 
     @@index([quiz_id])
     @@index([type])
+}
+
+model QuizSession {
+    id              Int                   @id @default(autoincrement())
+    quiz_id         Int
+    title           String                @db.VarChar(100)
+    description     String?               @db.Text
+    image_url       String?               @db.Text
+    difficulty      QuizSessionDifficulty
+    category        QuizSessionCategory
+    time_limit      Int
+    visibility      QuizSessionVisibility @default(PUBLIC)
+    password        String?               @db.VarChar(100)
+    show_answers    Boolean
+    allow_retake    Boolean
+    single_choice   Int
+    multiple_choice Int
+    open_ended      Int
+    open_time       DateTime
+    close_time      DateTime
+    created_at      DateTime              @default(now())
+
+    quiz            Quiz                  @relation(fields: [quiz_id], references: [id])
+
+    @@index([quiz_id])
+    @@index([difficulty])
+    @@index([category])
+    @@index([visibility])
 }
