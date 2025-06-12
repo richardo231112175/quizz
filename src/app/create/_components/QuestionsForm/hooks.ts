@@ -7,6 +7,7 @@ type QuestionType = 'single_choice' | 'multiple_choice' | 'open_ended';
 type useQuestionsFormProps = {
     questions: Question[];
     setQuestions: Dispatch<SetStateAction<Question[]>>;
+    isSubmitting: boolean;
 };
 
 export type useQuestionsFormType = {
@@ -17,16 +18,17 @@ export type useQuestionsFormType = {
     addQuestion: (e: MouseEvent<HTMLButtonElement>) => void;
     updateQuestion: (question: Question) => void;
     removeQuestion: (id: string) => void;
-    getFilteredQuestions: () => Question[];
+    getFilteredQuestions: (filter: string) => Question[];
     getQuestionTypeColor: (type: string) => string;
 };
 
-export function useQuestionsForm({ questions, setQuestions }: useQuestionsFormProps): useQuestionsFormType {
+export function useQuestionsForm({ questions, setQuestions, isSubmitting }: useQuestionsFormProps): useQuestionsFormType {
     const [ activeFilter, setActiveFilter ]: [QuestionType, Dispatch<SetStateAction<QuestionType>>] = useState<QuestionType>('single_choice');
     const [ expandedQuestion, setExpandedQuestion ]: [string | null, Dispatch<SetStateAction<string | null>>] = useState<string | null>(null);
 
     function addQuestion(e: MouseEvent<HTMLButtonElement>): void {
         e.preventDefault();
+        if (isSubmitting) return;
 
         if (activeFilter === 'single_choice') {
             setQuestions([ ...questions, {
@@ -68,16 +70,18 @@ export function useQuestionsForm({ questions, setQuestions }: useQuestionsFormPr
     }
 
     function updateQuestion(question: Question): void {
+        if (isSubmitting) return;
         setQuestions(questions.map((q) => q.id === question.id ? { ...q, ...question } : q));
     };
 
     function removeQuestion(id: string): void {
+        if (isSubmitting) return;
         setQuestions(questions.filter((q) => q.id !== id));
         if (expandedQuestion === id) setExpandedQuestion(null);
     };
 
-    function getFilteredQuestions(): Question[] {
-        return questions.filter((q) => q.type === activeFilter);
+    function getFilteredQuestions(filter: string): Question[] {
+        return questions.filter((q) => q.type === filter);
     }
 
     function getQuestionTypeColor(type: string): string {

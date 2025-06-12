@@ -9,23 +9,40 @@ import { Button } from '@/components/Button';
 import { Checkbox } from '@/components/Checkbox';
 import { type Question } from '../../hooks';
 import { useQuestionEditDialog, type useQuestionEditDialogType } from './hooks';
+import { type parsedQuestionError } from '../../actions';
 
 type QuestionEditDialogProps = {
     question: Question;
     updateQuestion: (question: Question) => void;
+    error: parsedQuestionError[] | undefined;
+    isSubmitting: boolean;
 };
 
-export default function QuestionEditDialog({ question, updateQuestion }: QuestionEditDialogProps): JSX.Element {
+export default function QuestionEditDialog({ question, updateQuestion, error, isSubmitting }: QuestionEditDialogProps): JSX.Element {
     const {
-        localQuestion,
-        setLocalQuestion,
         handleImageChange,
+        handleImageDelete,
         addAnswer,
         handleMultipleChoiceAnswerChange,
-        handleImageDelete,
-    }: useQuestionEditDialogType = useQuestionEditDialog({ question });
+    }: useQuestionEditDialogType = useQuestionEditDialog({ question, updateQuestion, isSubmitting });
 
     const fileInputRef: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null);
+
+    function getFieldError(field: string): string | undefined {
+        return error?.find((e) => e.path === field)?.message;
+    }
+
+    function getAnswerError(answerIndex: number): string | undefined {
+        if (question.type === 'open_ended') return undefined;
+        return error?.find((e) => e.path === `${question.type === 'single_choice' ? 'singleChoiceOptions' : 'multipleChoiceOptions'}.${answerIndex}`)?.message;
+    }
+
+    const questionError: string | undefined = getFieldError('question');
+    const timeLimitError: string | undefined = getFieldError('timeLimit');
+    const maxScoreError: string | undefined = getFieldError('maxScore');
+    const correctAnswerError: string | undefined = question.type === 'open_ended' ? getFieldError('openEndedAnswerKey') : undefined;
+    const singleChoiceCorrectError: string | undefined = question.type === 'single_choice' ? getFieldError('singleChoiceCorrect') : undefined;
+    const multipleChoiceCorrectError: string | undefined = question.type === 'multiple_choice' ? getFieldError('multipleChoiceCorrect') : undefined;
 
     return (
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40">
@@ -36,12 +53,16 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                 <div className="space-y-2">
                     <Label>Question Text</Label>
                     <Textarea
-                        value={localQuestion.question}
-                        onChange={(e) => setLocalQuestion({ ...localQuestion, question: e.target.value })}
+                        value={question.question}
+                        onChange={(e) => updateQuestion({ ...question, question: e.target.value })}
                         placeholder="Enter your question"
                         required
-                        className="resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40"
+                        className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${questionError ? 'border-red-500' : ''}`}
+                        disabled={isSubmitting}
                     />
+                    {questionError && (
+                        <p className="text-sm text-red-500">{questionError}</p>
+                    )}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -50,10 +71,15 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                             type="number"
                             min="5"
                             max="300"
-                            value={localQuestion.timeLimit}
-                            onChange={(e) => setLocalQuestion({ ...localQuestion, timeLimit: parseInt(e.target.value) || 0 })}
+                            value={question.timeLimit}
+                            onChange={(e) => updateQuestion({ ...question, timeLimit: parseInt(e.target.value) || 0 })}
                             required
+                            className={timeLimitError ? 'border-red-500' : ''}
+                            disabled={isSubmitting}
                         />
+                        {timeLimitError && (
+                            <p className="text-sm text-red-500">{timeLimitError}</p>
+                        )}
                     </div>
                     <div className="space-y-2">
                         <Label>Max Score</Label>
@@ -61,10 +87,15 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                             type="number"
                             min="1"
                             max="100"
-                            value={localQuestion.maxScore}
-                            onChange={(e) => setLocalQuestion({ ...localQuestion, maxScore: parseInt(e.target.value) || 0 })}
+                            value={question.maxScore}
+                            onChange={(e) => updateQuestion({ ...question, maxScore: parseInt(e.target.value) || 0 })}
                             required
+                            className={maxScoreError ? 'border-red-500' : ''}
+                            disabled={isSubmitting}
                         />
+                        {maxScoreError && (
+                            <p className="text-sm text-red-500">{maxScoreError}</p>
+                        )}
                     </div>
                 </div>
                 <div className="space-y-2">
@@ -73,21 +104,26 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => {
+                                if (isSubmitting) return;
+                                fileInputRef.current?.click();
+                            }}
+                            disabled={isSubmitting}
                         >
                             <ImagePlus className="h-4 w-4 mr-2" />
-                            {localQuestion.image ? 'Change Image' : 'Upload Image'}
+                            {question.image ? 'Change Image' : 'Upload Image'}
                         </Button>
-                        {localQuestion.image && (
+                        {question.image && (
                             <div>
                                 <span className="text-sm text-muted-foreground">
-                                    {localQuestion.image.name}
+                                    {question.image.name}
                                 </span>
                                 <Button
                                     type="button"
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleImageDelete}
+                                    disabled={isSubmitting}
                                 >
                                     <X className="h-4 w-4" />
                                 </Button>
@@ -100,25 +136,35 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                         accept="image/*"
                         className="hidden"
                         onChange={handleImageChange}
+                        disabled={isSubmitting}
                     />
                 </div>
-                {localQuestion.type === 'open_ended' ? (
+                {question.type === 'open_ended' ? (
                     <div className="space-y-2">
                         <Label>Correct Answer</Label>
                         <Textarea
-                            value={localQuestion.correctAnswer}
-                            onChange={(e) => setLocalQuestion({ ...localQuestion, correctAnswer: e.target.value })}
+                            value={question.correctAnswer}
+                            onChange={(e) => updateQuestion({ ...question, correctAnswer: e.target.value })}
                             placeholder="Enter the correct answer"
                             required
-                            className="resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40"
+                            className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${correctAnswerError ? 'border-red-500' : ''}`}
+                            disabled={isSubmitting}
                         />
+                        {correctAnswerError && (
+                            <p className="text-sm text-red-500">{correctAnswerError}</p>
+                        )}
                     </div>
                 ) : (
                     <div className="space-y-4">
                         <div className="flex justify-between items-center">
-                            <Label>Answers</Label>
+                            <div className="space-y-1">
+                                <Label>Answers</Label>
+                                {(singleChoiceCorrectError || multipleChoiceCorrectError) && (
+                                    <p className="text-sm text-red-500">{singleChoiceCorrectError || multipleChoiceCorrectError}</p>
+                                )}
+                            </div>
                             <Button
-                                disabled={localQuestion.answers.length >= 10}
+                                disabled={question.answers.length >= 10 || isSubmitting}
                                 type="button"
                                 variant="outline"
                                 size="sm"
@@ -128,64 +174,71 @@ export default function QuestionEditDialog({ question, updateQuestion }: Questio
                             </Button>
                         </div>
                         <div className="space-y-2">
-                            {localQuestion.answers.map((answer) => (
-                                <div key={answer.id} className="flex items-start gap-2">
-                                    {localQuestion.type === 'single_choice' ? (
-                                        <input
-                                            type="radio"
-                                            checked={answer.isCorrect}
-                                            onChange={() => {
-                                                setLocalQuestion({
-                                                    ...localQuestion,
-                                                    answers: localQuestion.answers.map((a) => ({
+                            {question.answers.map((answer, index) => {
+                                const answerError: string | undefined = getAnswerError(index);
+                                return (
+                                    <div key={answer.id} className="flex items-start gap-2">
+                                        {question.type === 'single_choice' ? (
+                                            <input
+                                                type="radio"
+                                                checked={answer.isCorrect}
+                                                onChange={() => updateQuestion({
+                                                    ...question,
+                                                    answers: question.answers.map((a) => ({
                                                         ...a,
                                                         isCorrect: a.id === answer.id,
                                                     })),
-                                                });
-                                            }}
-                                            className="mt-3 accent-current"
-                                        />
-                                    ) : (
-                                        <Checkbox
-                                            checked={answer.isCorrect}
-                                            onCheckedChange={(checked) => handleMultipleChoiceAnswerChange(answer.id, !!checked)}
-                                            className="mt-3"
-                                        />
-                                    )}
-                                    <Input
-                                        value={answer.text}
-                                        onChange={(e) => setLocalQuestion({
-                                            ...localQuestion,
-                                            answers: localQuestion.answers.map((a) =>
-                                                a.id === answer.id ? { ...a, text: e.target.value } : a
-                                            ),
-                                        })}
-                                        placeholder="Enter answer"
-                                        required
-                                    />
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => setLocalQuestion({
-                                            ...localQuestion,
-                                            answers: localQuestion.answers.filter((a) => a.id !== answer.id),
-                                        })}
-                                        disabled={localQuestion.answers.length <= 2}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ))}
+                                                })}
+                                                className="mt-3 accent-current"
+                                                disabled={isSubmitting}
+                                            />
+                                        ) : (
+                                            <Checkbox
+                                                checked={answer.isCorrect}
+                                                onCheckedChange={(checked) => handleMultipleChoiceAnswerChange(answer.id, !!checked)}
+                                                className="mt-3"
+                                                disabled={isSubmitting}
+                                            />
+                                        )}
+                                        <div className="flex-1 space-y-1">
+                                            <Input
+                                                value={answer.text}
+                                                onChange={(e) => updateQuestion({
+                                                    ...question,
+                                                    answers: question.answers.map((a) =>
+                                                        a.id === answer.id ? { ...a, text: e.target.value } : a
+                                                    ),
+                                                })}
+                                                placeholder="Enter answer"
+                                                required
+                                                className={answerError ? 'border-red-500' : ''}
+                                                disabled={isSubmitting}
+                                            />
+                                            {answerError && (
+                                                <p className="text-sm text-red-500">{answerError}</p>
+                                            )}
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => updateQuestion({
+                                                ...question,
+                                                answers: question.answers.filter((a) => a.id !== answer.id),
+                                            })}
+                                            disabled={question.answers.length <= 2 || isSubmitting}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
                 <div className="flex justify-end gap-2">
                     <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancel</Button>
-                    </DialogClose>
-                    <DialogClose asChild>
-                        <Button type="button" onClick={() => updateQuestion(localQuestion)}>Save Changes</Button>
+                        <Button type="button" variant="outline">Close</Button>
                     </DialogClose>
                 </div>
             </div>

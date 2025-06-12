@@ -1,14 +1,27 @@
 'use client';
 
 import { type JSX } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/Button';
+import UnknownError from './_components/UnknownError';
 import BasicInformationForm from './_components/BasicInformationForm';
 import QuestionsForm from './_components/QuestionsForm';
 import { useCreateQuiz, type useCreateQuizType } from './hooks';
 
 export default function CreateQuizPage(): JSX.Element {
-    const { title, setTitle, description, setDescription, questions, setQuestions, handleSubmit }: useCreateQuizType = useCreateQuiz();
+    const {
+        title,
+        setTitle,
+        description,
+        setDescription,
+        questions,
+        setQuestions,
+        unknownError,
+        quizErrors,
+        questionErrors,
+        isSubmitting,
+        handleSubmit,
+    }: useCreateQuizType = useCreateQuiz();
 
     return (
         <div className="min-h-screen pt-24 pb-16">
@@ -19,15 +32,25 @@ export default function CreateQuizPage(): JSX.Element {
                         <p className="text-lg text-muted-foreground">Design your quiz content and questions</p>
                     </div>
                     <form onSubmit={handleSubmit}>
+                        <AnimatePresence mode="wait">
+                            {unknownError && <UnknownError />}
+                        </AnimatePresence>
                         <BasicInformationForm
                             title={title}
                             description={description}
                             setTitle={setTitle}
                             setDescription={setDescription}
+                            errors={quizErrors}
+                            isSubmitting={isSubmitting}
                         />
-                        <QuestionsForm questions={questions} setQuestions={setQuestions} />
+                        <QuestionsForm
+                            questions={questions}
+                            setQuestions={setQuestions}
+                            errors={questionErrors}
+                            isSubmitting={isSubmitting}
+                        />
                         <div className="flex justify-end">
-                            <Button type="submit" size="lg" disabled={!title || !description || questions.length === 0}>Create Quiz</Button>
+                            <Button type="submit" size="lg" disabled={isSubmitting}>Create Quiz</Button>
                         </div>
                     </form>
                 </motion.div>

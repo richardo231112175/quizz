@@ -1,4 +1,5 @@
 import { useState, type Dispatch, type SetStateAction, type FormEvent } from 'react';
+import { parseQuiz, parseQuestion, type parseQuizReturn, type parsedQuizError, type parseQuestionReturn, type parsedQuestionError } from './actions';
 
 type Answer = {
     id: string;
@@ -38,6 +39,10 @@ export type useCreateQuizType = {
     setDescription: Dispatch<SetStateAction<string>>;
     questions: Question[];
     setQuestions: Dispatch<SetStateAction<Question[]>>;
+    unknownError: boolean;
+    quizErrors: parsedQuizError[];
+    questionErrors: parsedQuestionError[][];
+    isSubmitting: boolean;
     handleSubmit: (e: FormEvent) => Promise<void>;
 };
 
@@ -45,10 +50,44 @@ export function useCreateQuiz(): useCreateQuizType {
     const [ title, setTitle ]: [string, Dispatch<SetStateAction<string>>] = useState('');
     const [ description, setDescription ]: [string, Dispatch<SetStateAction<string>>] = useState('');
     const [ questions, setQuestions ]: [Question[], Dispatch<SetStateAction<Question[]>>] = useState<Question[]>([]);
+    const [ unknownError, setUnknownError ]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(false);
+    const [ quizErrors, setQuizErrors ]: [parsedQuizError[], Dispatch<SetStateAction<parsedQuizError[]>>] = useState<parsedQuizError[]>([]);
+    const [ questionErrors, setQuestionErrors ]: [parsedQuestionError[][], Dispatch<SetStateAction<parsedQuestionError[][]>>] = useState<parsedQuestionError[][]>([]);
+    const [ isSubmitting, setIsSubmitting ]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(false);
 
     async function handleSubmit(e: FormEvent): Promise<void> {
         e.preventDefault();
-        console.log({ title, description, questions });
+
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+        setUnknownError(false);
+        setQuizErrors([]);
+        setQuestionErrors([]);
+
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        const quiz: parseQuizReturn = await parseQuiz({ title, description });
+        const parsedQuestions: parseQuestionReturn = await parseQuestion(questions);
+
+        if (quiz === undefined || parsedQuestions === undefined) {
+            setUnknownError(true);
+            setIsSubmitting(false);
+            return;
+        }
+
+        if (!quiz.success) {
+            setQuizErrors(quiz.errors);
+        }
+
+        if (!parsedQuestions.success) {
+            setQuestionErrors(parsedQuestions.errors);
+        }
+
+        if (quiz.success && parsedQuestions.success) {
+            console.log('success');
+        }
+
+        setIsSubmitting(false);
     }
 
     return {
@@ -58,6 +97,10 @@ export function useCreateQuiz(): useCreateQuizType {
         setDescription,
         questions,
         setQuestions,
+        unknownError,
+        quizErrors,
+        questionErrors,
+        isSubmitting,
         handleSubmit,
     };
 }
