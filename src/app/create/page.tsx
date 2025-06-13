@@ -10,10 +10,8 @@ import { useCreateQuiz, type useCreateQuizType } from './hooks';
 
 export default function CreateQuizPage(): JSX.Element {
     const {
-        title,
-        setTitle,
-        description,
-        setDescription,
+        quiz,
+        setQuiz,
         questions,
         setQuestions,
         unknownError,
@@ -36,10 +34,8 @@ export default function CreateQuizPage(): JSX.Element {
                             {unknownError && <UnknownError />}
                         </AnimatePresence>
                         <BasicInformationForm
-                            title={title}
-                            description={description}
-                            setTitle={setTitle}
-                            setDescription={setDescription}
+                            quiz={quiz}
+                            setQuiz={setQuiz}
                             errors={quizErrors}
                             isSubmitting={isSubmitting}
                         />

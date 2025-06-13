@@ -1,5 +1,10 @@
 import { useState, type Dispatch, type SetStateAction, type FormEvent } from 'react';
-import { parseQuiz, parseQuestion, type parseQuizReturn, type parsedQuizError, type parseQuestionReturn, type parsedQuestionError } from './actions';
+import { createQuiz, type createQuizReturn, type parsedQuizError, type parsedQuestionError } from './actions';
+
+export type Quiz = {
+    title: string;
+    description: string;
+};
 
 type Answer = {
     id: string;
@@ -33,10 +38,8 @@ type OpenEndedQuestion = BaseQuestion & {
 export type Question = SingleChoiceQuestion | MultipleChoiceQuestion | OpenEndedQuestion;
 
 export type useCreateQuizType = {
-    title: string;
-    setTitle: Dispatch<SetStateAction<string>>;
-    description: string;
-    setDescription: Dispatch<SetStateAction<string>>;
+    quiz: Quiz;
+    setQuiz: Dispatch<SetStateAction<Quiz>>;
     questions: Question[];
     setQuestions: Dispatch<SetStateAction<Question[]>>;
     unknownError: boolean;
@@ -47,8 +50,7 @@ export type useCreateQuizType = {
 };
 
 export function useCreateQuiz(): useCreateQuizType {
-    const [ title, setTitle ]: [string, Dispatch<SetStateAction<string>>] = useState('');
-    const [ description, setDescription ]: [string, Dispatch<SetStateAction<string>>] = useState('');
+    const [ quiz, setQuiz ]: [Quiz, Dispatch<SetStateAction<Quiz>>] = useState<Quiz>({ title: '', description: '' });
     const [ questions, setQuestions ]: [Question[], Dispatch<SetStateAction<Question[]>>] = useState<Question[]>([]);
     const [ unknownError, setUnknownError ]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(false);
     const [ quizErrors, setQuizErrors ]: [parsedQuizError[], Dispatch<SetStateAction<parsedQuizError[]>>] = useState<parsedQuizError[]>([]);
@@ -64,26 +66,14 @@ export function useCreateQuiz(): useCreateQuizType {
         setQuizErrors([]);
         setQuestionErrors([]);
 
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        const result: createQuizReturn = await createQuiz(quiz, questions);
 
-        const quiz: parseQuizReturn = await parseQuiz({ title, description });
-        const parsedQuestions: parseQuestionReturn = await parseQuestion(questions);
-
-        if (quiz === undefined || parsedQuestions === undefined) {
+        if (result === undefined) {
             setUnknownError(true);
-            setIsSubmitting(false);
-            return;
-        }
-
-        if (!quiz.success) {
-            setQuizErrors(quiz.errors);
-        }
-
-        if (!parsedQuestions.success) {
-            setQuestionErrors(parsedQuestions.errors);
-        }
-
-        if (quiz.success && parsedQuestions.success) {
+        } else if (!result.success) {
+            setQuestionErrors(result.errors.questions);
+            setQuizErrors(result.errors.quiz);
+        } else {
             console.log('success');
         }
 
@@ -91,10 +81,8 @@ export function useCreateQuiz(): useCreateQuizType {
     }
 
     return {
-        title,
-        setTitle,
-        description,
-        setDescription,
+        quiz,
+        setQuiz,
         questions,
         setQuestions,
         unknownError,
