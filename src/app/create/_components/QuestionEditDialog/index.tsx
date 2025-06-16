@@ -163,6 +163,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             required
                             className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${correctAnswerError ? 'border-red-500' : ''}`}
                             disabled={isSubmitting}
+                            autoCapitalize="none"
+                            autoComplete="off"
+                            spellCheck="false"
                         />
                         {correctAnswerError && (
                             <p className="text-sm text-red-500">{correctAnswerError}</p>
