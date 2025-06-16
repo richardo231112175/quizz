@@ -36,6 +36,9 @@ export default function BasicInformationForm({ quiz, setQuiz, errors, isSubmitti
                         required
                         className={titleError ? 'border-red-500' : ''}
                         disabled={isSubmitting}
+                        autoCapitalize="none"
+                        autoComplete="off"
+                        spellCheck="false"
                     />
                     {titleError && (
                         <p className="text-sm text-red-500 mt-1">{titleError}</p>
@@ -53,6 +56,9 @@ export default function BasicInformationForm({ quiz, setQuiz, errors, isSubmitti
                         }}
                         className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${descriptionError ? 'border-red-500' : ''}`}
                         disabled={isSubmitting}
+                        autoCapitalize="none"
+                        autoComplete="off"
+                        spellCheck="false"
                     />
                     {descriptionError && (
                         <p className="text-sm text-red-500 mt-1">{descriptionError}</p>

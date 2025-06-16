@@ -2,6 +2,9 @@
 
 import { z } from 'zod/v4';
 import { auth } from '@clerk/nextjs/server';
+import { v4 as uuidv4 } from 'uuid';
+import supabase from '@/lib/supabase';
+import prisma from '@/lib/prisma';
 import { QuizSchema } from '@/validations/quiz';
 import { SingleChoiceQuestionSchema, MultipleChoiceQuestionSchema, OpenEndedQuestionSchema } from '@/validations/question';
 import { type Quiz,type Question } from './hooks';
@@ -15,6 +18,11 @@ export type createQuizReturn = {
         questions: parsedQuestionError[][];
     };
 } | undefined;
+
+type upload = {
+    id: string;
+    file: File;
+}
 
 export async function createQuiz(quiz: Quiz, questions: Question[]): Promise<createQuizReturn> {
     const parsedQuiz: parseQuizResult = parseQuiz({ title: quiz.title, description: quiz.description });
@@ -35,9 +43,46 @@ export async function createQuiz(quiz: Quiz, questions: Question[]): Promise<cre
         };
     }
 
-    console.log('Do something', userId);
+    const uploadedImages: uploadImagesResult = await uploadImages(questions);
 
-    return { success: true };
+    if (!uploadedImages.success) {
+        return {
+            success: false,
+            errors: {
+                quiz: [],
+                questions: uploadedImages.ids.map((id) => ([ {
+                    questionId: id,
+                    path: 'image',
+                    message: 'Failed to upload image',
+                } ])),
+            },
+        };
+    }
+
+    try {
+        await prisma.quiz.create({
+            data: {
+                clerk_id: userId,
+                title: parsedQuiz.data.title,
+                description: parsedQuiz.data.description,
+                questions: {
+                    create: parsedQuestions.data.map((question, index) => ({
+                        question: question.question,
+                        image_url: uploadedImages.uploaded.find((upload) => upload.id === questions[index].id)?.path ?? null,
+                        type: question.type === 'single_choice' ? 'SINGLE_CHOICE' : question.type === 'multiple_choice' ? 'MULTIPLE_CHOICE' : 'OPEN_ENDED',
+                        time_limit: question.timeLimit,
+                        max_score: question.maxScore,
+                        single_choice_options: question.type === 'single_choice' ? question.singleChoiceOptions.join(',') : null,
+                        single_choice_correct: question.type === 'single_choice' ? question.singleChoiceCorrect : null,
+                        multiple_choice_options: question.type === 'multiple_choice' ? question.multipleChoiceOptions.join(',') : null,
+                        multiple_choice_correct: question.type === 'multiple_choice' ? question.multipleChoiceCorrect.join(',') : null,
+                        open_ended_answer_key: question.type === 'open_ended' ? question.openEndedAnswerKey : null,
+                    })),
+                },
+            },
+        });
+        return { success: true };
+    } catch {}
 }
 
 type parsedQuiz = {
@@ -198,5 +243,78 @@ function parseQuestion(questions: Question[]): parseQuestionResult {
     return {
         success: true,
         data: parsedQuestions,
+    };
+}
+
+type supabaseData = {
+    id: string;
+    path: string;
+    fullPath: string;
+} | null;
+
+type uploadSuccess = {
+    success: true;
+    id: string;
+    path: string;
+}
+
+type uploadFail = {
+    success: false;
+    id: string;
+}
+type uploadedResult = uploadSuccess | uploadFail;
+
+type uploadImagesResult = {
+    success: true;
+    uploaded: uploadSuccess[];
+} | {
+    success: false;
+    ids: string[];
+}
+
+async function uploadImages(questions: Question[]): Promise<uploadImagesResult> {
+    const uploads: upload[] = questions.reduce((acc, question) => {
+        if (question.image !== null) {
+            acc.push({
+                id: question.id,
+                file: question.image,
+            });
+        }
+
+        return acc;
+    }, [] as upload[]);
+
+    const uploaded: uploadedResult[] = await Promise.all(uploads.map(async (upload) => {
+        const { data, error }: { data: supabaseData , error: unknown} = await supabase.storage.from('quizz').upload(uuidv4(), upload.file);
+
+        if (error || data === null) {
+            return {
+                success: false,
+                id: upload.id,
+            };
+        }
+
+        return {
+            success: true,
+            id: upload.id,
+            path: data.path,
+        };
+    }));
+
+    const failUpload: string[] = uploaded.filter((upload) => !upload.success).map((upload) => upload.id);
+
+    if (failUpload.length) {
+        const uploadedPaths: string[] = uploaded.filter((upload) => upload.success).map((upload) => upload.path);
+        await supabase.storage.from('quizz').remove(uploadedPaths);
+
+        return {
+            success: false,
+            ids: failUpload,
+        };
+    }
+
+    return {
+        success: true,
+        uploaded: uploaded as uploadSuccess[],
     };
 }

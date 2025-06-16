@@ -46,6 +46,7 @@ export type useCreateQuizType = {
     quizErrors: parsedQuizError[];
     questionErrors: parsedQuestionError[][];
     isSubmitting: boolean;
+    showSuccessDialog: boolean;
     handleSubmit: (e: FormEvent) => Promise<void>;
 };
 
@@ -56,6 +57,7 @@ export function useCreateQuiz(): useCreateQuizType {
     const [ quizErrors, setQuizErrors ]: [parsedQuizError[], Dispatch<SetStateAction<parsedQuizError[]>>] = useState<parsedQuizError[]>([]);
     const [ questionErrors, setQuestionErrors ]: [parsedQuestionError[][], Dispatch<SetStateAction<parsedQuestionError[][]>>] = useState<parsedQuestionError[][]>([]);
     const [ isSubmitting, setIsSubmitting ]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(false);
+    const [ showSuccessDialog, setShowSuccessDialog ]: [boolean, Dispatch<SetStateAction<boolean>>] = useState(false);
 
     async function handleSubmit(e: FormEvent): Promise<void> {
         e.preventDefault();
@@ -74,7 +76,7 @@ export function useCreateQuiz(): useCreateQuizType {
             setQuestionErrors(result.errors.questions);
             setQuizErrors(result.errors.quiz);
         } else {
-            console.log('success');
+            setShowSuccessDialog(true);
         }
 
         setIsSubmitting(false);
@@ -89,6 +91,7 @@ export function useCreateQuiz(): useCreateQuizType {
         quizErrors,
         questionErrors,
         isSubmitting,
+        showSuccessDialog,
         handleSubmit,
     };
 }

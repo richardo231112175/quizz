@@ -6,6 +6,7 @@ import { Button } from '@/components/Button';
 import UnknownError from './_components/UnknownError';
 import BasicInformationForm from './_components/BasicInformationForm';
 import QuestionsForm from './_components/QuestionsForm';
+import { SuccessDialog } from './_components/SuccessDialog';
 import { useCreateQuiz, type useCreateQuizType } from './hooks';
 
 export default function CreateQuizPage(): JSX.Element {
@@ -18,6 +19,7 @@ export default function CreateQuizPage(): JSX.Element {
         quizErrors,
         questionErrors,
         isSubmitting,
+        showSuccessDialog,
         handleSubmit,
     }: useCreateQuizType = useCreateQuiz();
 
@@ -51,6 +53,7 @@ export default function CreateQuizPage(): JSX.Element {
                     </form>
                 </motion.div>
             </div>
+            <SuccessDialog isOpen={showSuccessDialog} />
         </div>
     );
 }

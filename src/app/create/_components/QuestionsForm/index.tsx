@@ -149,7 +149,7 @@ export default function QuestionsForm({ questions, setQuestions, errors, isSubmi
                                                             <ul className="mt-1 space-y-1">
                                                                 {question.answers.map((answer) => (
                                                                     <li key={answer.id} className="text-sm flex items-center gap-2">
-                                                                        <span className={`w-2 h-2 shrink-0 rounded-full border ${answer.isCorrect ? 'bg-current' : 'border-current'}`} />
+                                                                        <span className={`w-2 h-2 shrink-0 ${question.type === 'single_choice' ? 'rounded-full' : 'rounded-xs'} border ${answer.isCorrect ? 'bg-current' : 'border-current'}`} />
                                                                         {answer.text ? (
                                                                             <span className="min-w-0 break-words">{answer.text}</span>
                                                                         ) : (

@@ -40,6 +40,7 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
     const questionError: string | undefined = getFieldError('question');
     const timeLimitError: string | undefined = getFieldError('timeLimit');
     const maxScoreError: string | undefined = getFieldError('maxScore');
+    const imageError: string | undefined = getFieldError('image');
     const correctAnswerError: string | undefined = question.type === 'open_ended' ? getFieldError('openEndedAnswerKey') : undefined;
     const singleChoiceCorrectError: string | undefined = question.type === 'single_choice' ? getFieldError('singleChoiceCorrect') : undefined;
     const multipleChoiceCorrectError: string | undefined = question.type === 'multiple_choice' ? getFieldError('multipleChoiceCorrect') : undefined;
@@ -59,6 +60,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                         required
                         className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${questionError ? 'border-red-500' : ''}`}
                         disabled={isSubmitting}
+                        autoCapitalize="none"
+                        autoComplete="off"
+                        spellCheck="false"
                     />
                     {questionError && (
                         <p className="text-sm text-red-500">{questionError}</p>
@@ -76,6 +80,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             required
                             className={timeLimitError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
+                            autoCapitalize="none"
+                            autoComplete="off"
+                            spellCheck="false"
                         />
                         {timeLimitError && (
                             <p className="text-sm text-red-500">{timeLimitError}</p>
@@ -92,6 +99,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             required
                             className={maxScoreError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
+                            autoCapitalize="none"
+                            autoComplete="off"
+                            spellCheck="false"
                         />
                         {maxScoreError && (
                             <p className="text-sm text-red-500">{maxScoreError}</p>
@@ -108,6 +118,7 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                                 if (isSubmitting) return;
                                 fileInputRef.current?.click();
                             }}
+                            className={imageError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                         >
                             <ImagePlus className="h-4 w-4 mr-2" />
@@ -130,6 +141,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             </div>
                         )}
                     </div>
+                    {imageError && (
+                        <p className="text-sm text-red-500">{imageError}</p>
+                    )}
                     <input
                         ref={fileInputRef}
                         type="file"
@@ -213,6 +227,9 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                                                 required
                                                 className={answerError ? 'border-red-500' : ''}
                                                 disabled={isSubmitting}
+                                                autoCapitalize="none"
+                                                autoComplete="off"
+                                                spellCheck="false"
                                             />
                                             {answerError && (
                                                 <p className="text-sm text-red-500">{answerError}</p>
