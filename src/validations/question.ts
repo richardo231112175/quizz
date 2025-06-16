@@ -5,7 +5,16 @@ const QuestionSchema = z.object({
     question: z.string()
         .min(1, 'Question is required')
         .max(1000, 'Question cannot exceed 1000 characters'),
-    image: z.instanceof(File).nullable(),
+    image: z.instanceof(File)
+        .nullable()
+        .refine(
+            (file) => file === null || file.type.startsWith('image/'),
+            { message: 'Only image files are allowed' }
+        )
+        .refine(
+            (file) => file === null || file.size <= 2 * 1024 * 1024,
+            { message: 'Image must not exceed 2MB' }
+        ),
     timeLimit: z.number()
         .min(5, 'Time limit must be at least 5 seconds')
         .max(300, 'Time limit cannot exceed 300 seconds'),
