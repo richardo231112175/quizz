@@ -9,6 +9,8 @@ type categoryType = {
     quizCount: number;
 };
 
+export type Categories = 'science' | 'history' | 'geography' | 'technology' | 'arts' | 'sports' | 'music' | 'health';
+
 export const categories: categoryType[] = [
     {
         id: 'science',
