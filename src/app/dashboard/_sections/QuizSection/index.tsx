@@ -15,7 +15,7 @@ export default function QuizSection({ quizzes }: QuizSectionProps): JSX.Element 
             {quizzes.map((quiz) => (
                 <Card key={quiz.id} className="pb-12 relative">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-xl font-semibold">{quiz.title}</CardTitle>
+                        <CardTitle className="text-xl font-semibold truncate">{quiz.title}</CardTitle>
                         <Button variant="ghost" size="sm" asChild>
                             <Link href={`/quizz/${quiz.id}/edit`}>
                                 <Edit className="h-4 w-4" />
@@ -23,7 +23,7 @@ export default function QuizSection({ quizzes }: QuizSectionProps): JSX.Element 
                         </Button>
                     </CardHeader>
                     <CardContent>
-                        { quiz.description && <p className="text-sm text-muted-foreground mb-4">{quiz.description}</p> }
+                        { quiz.description && <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{quiz.description}</p> }
                         <div className="flex flex-col justify-between text-sm">
                             <div className="flex items-center gap-4">
                                 <span>{quiz._count.questions} questions</span>
