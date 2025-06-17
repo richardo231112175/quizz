@@ -27,7 +27,7 @@ export default function QuizSection({ quizzes }: QuizSectionProps): JSX.Element 
                         <div className="flex flex-col justify-between text-sm">
                             <div className="flex items-center gap-4">
                                 <span>{quiz._count.questions} questions</span>
-                                <span>3 sessions</span>
+                                <span>{quiz._count.sessions} sessions</span>
                             </div>
                             <div className="absolute bottom-6 right-6">
                                 <Button className="w-fit" variant="outline" size="sm" asChild>

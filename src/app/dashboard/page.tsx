@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 import { type JSX } from 'react';
 import { auth } from '@clerk/nextjs/server';
-import { type Prisma } from '@prisma/client';
 import prisma from '@/lib/prisma';
 import MainSection from './_sections/MainSection';
 
@@ -13,6 +12,7 @@ export type Quiz = {
     created_at: Date;
     _count: {
         questions: number;
+        sessions: number;
     };
 };
 
@@ -23,16 +23,17 @@ export default async function DashboardPage(): Promise<JSX.Element> {
         return redirect('/');
     }
 
-    const getQuiz: Prisma.PrismaPromise<Quiz[]> = prisma.quiz.findMany({
+    const quizzes: Quiz[] = await prisma.quiz.findMany({
         where: { clerk_id: userId },
         include: {
             _count: {
-                select: { questions: true },
+                select: {
+                    questions: true,
+                    sessions: true,
+                },
             },
         },
     });
-
-    const [ quizzes ]: [ Quiz[] ] = await Promise.all([ getQuiz ]);
 
     return <MainSection quizzes={quizzes} />;
 }
