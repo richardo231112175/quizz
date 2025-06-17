@@ -84,8 +84,6 @@ model QuizSession {
     time_limit      Int
     visibility      QuizSessionVisibility @default(PUBLIC)
     password        String?               @db.VarChar(100)
-    show_answers    Boolean
-    allow_retake    Boolean
     single_choice   Int
     multiple_choice Int
     open_ended      Int
