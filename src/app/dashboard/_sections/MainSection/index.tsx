@@ -10,11 +10,12 @@ import QuizSection from '../QuizSection';
 import { type Quiz } from '../../page';
 
 type MainSectionProps = {
-    quizzes: Quiz[]
+    quizzes: Quiz[];
+    tab?: string;
 };
 
-export default function MainSection({ quizzes }: MainSectionProps): JSX.Element {
-    const [ activeTab, setActiveTab ]: [ string, Dispatch<SetStateAction<string>> ] = useState<string>('quizzes');
+export default function MainSection({ quizzes, tab }: MainSectionProps): JSX.Element {
+    const [ activeTab, setActiveTab ]: [ string, Dispatch<SetStateAction<string>> ] = useState<string>(tab === 'sessions' ? 'sessions' : 'quizzes');
 
     return (
         <div className="min-h-screen pt-24 pb-16">

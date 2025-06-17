@@ -16,7 +16,11 @@ export type Quiz = {
     };
 };
 
-export default async function DashboardPage(): Promise<JSX.Element> {
+type DashboardPageProps = {
+    searchParams: { tab?: string };
+};
+
+export default async function DashboardPage({ searchParams }: DashboardPageProps): Promise<JSX.Element> {
     const { userId }: { userId: string | null } = await auth();
 
     if (!userId) {
@@ -35,5 +39,5 @@ export default async function DashboardPage(): Promise<JSX.Element> {
         },
     });
 
-    return <MainSection quizzes={quizzes} />;
+    return <MainSection quizzes={quizzes} tab={searchParams.tab} />;
 }
