@@ -33,7 +33,6 @@ export default function BasicInformationForm({ quiz, setQuiz, errors, isSubmitti
                             if (isSubmitting) return;
                             setQuiz({ ...quiz, title: e.target.value });
                         }}
-                        required
                         className={titleError ? 'border-red-500' : ''}
                         disabled={isSubmitting}
                         autoCapitalize="none"

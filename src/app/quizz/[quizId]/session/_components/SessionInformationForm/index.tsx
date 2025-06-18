@@ -38,7 +38,6 @@ export default function SessionInformationForm({ form, setForm, isSubmitting, er
                         placeholder="Enter session title"
                         value={form.title}
                         onChange={(e) => setForm({ ...form, title: e.target.value })}
-                        required
                         className={titleError ? 'border-red-500' : ''}
                         disabled={isSubmitting}
                         autoCapitalize="none"

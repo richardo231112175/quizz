@@ -46,7 +46,6 @@ export default function QuestionConfigurationForm({ form, setForm, isSubmitting,
                             max={counts.single_choice_count}
                             value={form.singleChoiceCount}
                             onChange={(e) => setForm({ ...form, singleChoiceCount: parseInt(e.target.value) || 0 })}
-                            required
                             className={singleChoiceError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -71,7 +70,6 @@ export default function QuestionConfigurationForm({ form, setForm, isSubmitting,
                             max={counts.multiple_choice_count}
                             value={form.multipleChoiceCount}
                             onChange={(e) => setForm({ ...form, multipleChoiceCount: parseInt(e.target.value) || 0 })}
-                            required
                             className={multipleChoiceError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -96,7 +94,6 @@ export default function QuestionConfigurationForm({ form, setForm, isSubmitting,
                             max={counts.open_ended_count}
                             value={form.openEndedCount}
                             onChange={(e) => setForm({ ...form, openEndedCount: parseInt(e.target.value) || 0 })}
-                            required
                             className={openEndedError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"

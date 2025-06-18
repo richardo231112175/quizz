@@ -57,7 +57,6 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                         value={question.question}
                         onChange={(e) => updateQuestion({ ...question, question: e.target.value })}
                         placeholder="Enter your question"
-                        required
                         className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${questionError ? 'border-red-500' : ''}`}
                         disabled={isSubmitting}
                         autoCapitalize="none"
@@ -77,7 +76,6 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             max="300"
                             value={question.timeLimit}
                             onChange={(e) => updateQuestion({ ...question, timeLimit: parseInt(e.target.value) || 0 })}
-                            required
                             className={timeLimitError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -96,7 +94,6 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             max="100"
                             value={question.maxScore}
                             onChange={(e) => updateQuestion({ ...question, maxScore: parseInt(e.target.value) || 0 })}
-                            required
                             className={maxScoreError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -160,7 +157,6 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                             value={question.correctAnswer}
                             onChange={(e) => updateQuestion({ ...question, correctAnswer: e.target.value })}
                             placeholder="Enter the correct answer"
-                            required
                             className={`resize-none scrollbar-thin scrollbar-track-muted/50 scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/40 ${correctAnswerError ? 'border-red-500' : ''}`}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -227,7 +223,6 @@ export default function QuestionEditDialog({ question, updateQuestion, error, is
                                                     ),
                                                 })}
                                                 placeholder="Enter answer"
-                                                required
                                                 className={answerError ? 'border-red-500' : ''}
                                                 disabled={isSubmitting}
                                                 autoCapitalize="none"

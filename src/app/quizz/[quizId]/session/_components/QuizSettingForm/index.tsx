@@ -83,7 +83,6 @@ export default function QuizSettingForm({ form, setForm, isSubmitting, errors }:
                             max="120"
                             value={form.timeLimit}
                             onChange={(e) => setForm({ ...form, timeLimit: parseInt(e.target.value) || 0 })}
-                            required
                             disabled={isSubmitting}
                             autoCapitalize="none"
                             autoComplete="off"
@@ -127,7 +126,6 @@ export default function QuizSettingForm({ form, setForm, isSubmitting, errors }:
                                 placeholder="Enter password"
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                                required={form.visibility === 'private'}
                                 disabled={isSubmitting}
                                 autoCapitalize="none"
                                 autoComplete="off"

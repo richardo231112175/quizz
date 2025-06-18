@@ -30,7 +30,6 @@ export default function ScheduleForm({ form, setForm, isSubmitting, errors }: Sc
                             type="datetime-local"
                             value={form.openTime}
                             onChange={(e) => setForm({ ...form, openTime: e.target.value })}
-                            required
                             className={openTimeError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
@@ -48,7 +47,6 @@ export default function ScheduleForm({ form, setForm, isSubmitting, errors }: Sc
                             type="datetime-local"
                             value={form.closeTime}
                             onChange={(e) => setForm({ ...form, closeTime: e.target.value })}
-                            required
                             className={closeTimeError ? 'border-red-500' : ''}
                             disabled={isSubmitting}
                             autoCapitalize="none"
