@@ -37,6 +37,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                 },
             },
         },
+        orderBy: [ { id: 'desc' } ],
     });
 
     return <MainSection quizzes={quizzes} tab={searchParams.tab} />;
