@@ -10,7 +10,7 @@ interface SuccessDialogProps {
     isOpen: boolean;
 }
 
-export function SuccessDialog({ isOpen }: SuccessDialogProps): JSX.Element {
+export default function SuccessDialog({ isOpen }: SuccessDialogProps): JSX.Element {
     const router: AppRouterInstance = useRouter();
 
     return (

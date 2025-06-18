@@ -6,7 +6,7 @@ import { Button } from '@/components/Button';
 import UnknownError from './_components/UnknownError';
 import BasicInformationForm from './_components/BasicInformationForm';
 import QuestionsForm from './_components/QuestionsForm';
-import { SuccessDialog } from './_components/SuccessDialog';
+import SuccessDialog from './_components/SuccessDialog';
 import { useCreateQuiz, type useCreateQuizType } from './hooks';
 
 export default function CreateQuizPage(): JSX.Element {
