@@ -67,7 +67,7 @@ model Question {
     multiple_choice_correct String?
     open_ended_answer_key   String?
 
-    quiz                    Quiz         @relation(fields: [quiz_id], references: [id])
+    quiz                    Quiz         @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
 
     @@index([quiz_id])
     @@index([type])
@@ -91,7 +91,7 @@ model QuizSession {
     close_time      DateTime
     created_at      DateTime              @default(now())
 
-    quiz            Quiz                  @relation(fields: [quiz_id], references: [id])
+    quiz            Quiz                  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
 
     @@index([quiz_id])
     @@index([difficulty])
