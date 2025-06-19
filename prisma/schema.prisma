@@ -75,6 +75,7 @@ model Question {
 
 model QuizSession {
     id              Int                   @id @default(autoincrement())
+    clerk_id        String
     quiz_id         Int
     title           String                @db.VarChar(100)
     description     String?               @db.Text

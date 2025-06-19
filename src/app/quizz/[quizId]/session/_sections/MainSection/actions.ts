@@ -1,6 +1,7 @@
 'use server';
 
 import { z } from 'zod/v4';
+import { auth } from '@clerk/nextjs/server';
 import { v4 as uuidv4 } from 'uuid';
 import prisma from '@/lib/prisma';
 import supabase from '@/lib/supabase';
@@ -18,8 +19,15 @@ export type createQuizSessionReturn = {
 } | undefined;
 
 export async function createQuizSession(quizId: number, form: QuizSessionType, counts: Counts): Promise<createQuizSessionReturn> {
+    const { userId }: { userId: string | null } = await auth();
+
+    if (!userId) return;
+
     const quiz: boolean = !!await prisma.quiz.findUnique({
-        where: { id: quizId },
+        where: {
+            id: quizId,
+            clerk_id: userId,
+        },
     });
 
     if (!quiz) {
@@ -51,6 +59,7 @@ export async function createQuizSession(quizId: number, form: QuizSessionType, c
     try {
         await prisma.quizSession.create({
             data: {
+                clerk_id: userId,
                 quiz_id: quizId,
                 title: parsedQuizSession.data.title,
                 description: parsedQuizSession.data.description,
