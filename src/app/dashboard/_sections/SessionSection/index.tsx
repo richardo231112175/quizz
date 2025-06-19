@@ -1,20 +1,35 @@
-import Link from 'next/link';
-import { type JSX } from 'react';
+import { useRouter } from 'next/navigation';
+import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { type JSX, type Dispatch, type SetStateAction } from 'react';
 import { type Session } from '../../page';
 import { Lock, MoreHorizontal, Eye, Edit, Trash2, Clock, Users } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/Card';
 import { Badge } from '@/components/Badge';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/DropdownMenu';
+import { Dialog } from '@/components/Dialog';
 import { Button } from '@/components/Button';
+import DeleteConfirmDialog from '../../_components/DeleteConfirmDialog';
 import { difficulties } from '@/lib/difficulties';
 import { useSessionSection, type useSessionSectionType } from './hooks';
 
 type SessionSectionProps = {
     sessions: Session[];
+    setSessions: Dispatch<SetStateAction<Session[]>>;
 };
 
-export default function SessionSection({ sessions }: SessionSectionProps): JSX.Element {
-    const { getDate, getStatus }: useSessionSectionType = useSessionSection();
+export default function SessionSection({ sessions, setSessions }: SessionSectionProps): JSX.Element {
+    const {
+        openConfirmDialog,
+        setOpenConfirmDialog,
+        deletingIds,
+        setDeleteId,
+        getDate,
+        getStatus,
+        deleteHandler,
+    }: useSessionSectionType = useSessionSection({ sessions, setSessions });
+
+    const router: AppRouterInstance = useRouter();
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sessions.map((session) => {
@@ -36,17 +51,20 @@ export default function SessionSection({ sessions }: SessionSectionProps): JSX.E
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem asChild>
-                                        <Link href={`/session/${session.id}`}>
-                                            <Eye className="h-4 w-4 mr-2" /> View Details
-                                        </Link>
+                                    <DropdownMenuItem onClick={() => router.push(`/session/${session.id}`)} disabled={deletingIds.includes(session.id)}>
+                                        <Eye className="h-4 w-4 mr-2" /> View Details
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem asChild onClick={() => {}}>
-                                        <Link href={`/session/${session.id}/edit`}>
-                                            <Edit className="h-4 w-4 mr-2" /> Edit Session
-                                        </Link>
+                                    <DropdownMenuItem onClick={() => router.push(`/session/${session.id}/edit`)} disabled={deletingIds.includes(session.id)}>
+                                        <Edit className="h-4 w-4 mr-2" /> Edit Session
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => {}} className="text-red-600">
+                                    <DropdownMenuItem
+                                        onClick={() => {
+                                            setDeleteId(session.id);
+                                            setOpenConfirmDialog(true);
+                                        }}
+                                        disabled={deletingIds.includes(session.id)}
+                                        className="text-red-600"
+                                    >
                                         <Trash2 className="h-4 w-4 mr-2" /> Delete Session
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -81,6 +99,9 @@ export default function SessionSection({ sessions }: SessionSectionProps): JSX.E
                     </Card>
                 );
             })}
+            <Dialog open={openConfirmDialog} onOpenChange={setOpenConfirmDialog}>
+                <DeleteConfirmDialog handleDelete={deleteHandler} setOpen={setOpenConfirmDialog} />
+            </Dialog>
         </div>
     );
 }

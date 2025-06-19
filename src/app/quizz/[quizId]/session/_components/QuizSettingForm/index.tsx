@@ -122,7 +122,7 @@ export default function QuizSettingForm({ form, setForm, isSubmitting, errors }:
                         <div className="relative">
                             <Input
                                 id="password"
-                                type="password"
+                                type="text"
                                 placeholder="Enter password"
                                 value={form.password}
                                 onChange={(e) => setForm({ ...form, password: e.target.value })}

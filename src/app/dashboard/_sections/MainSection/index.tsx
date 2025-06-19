@@ -17,7 +17,9 @@ type MainSectionProps = {
 
 export default function MainSection({ quizzes, tab }: MainSectionProps): JSX.Element {
     const [ activeTab, setActiveTab ]: [ string, Dispatch<SetStateAction<string>> ] = useState<string>(tab === 'sessions' ? 'sessions' : 'quizzes');
-    const sessions: Session[] = quizzes.reduce((obj, quiz) => [ ...obj, ...quiz.sessions ], [] as Session[]);
+    const [ sessions, setSessions ]: [ Session[], Dispatch<SetStateAction<Session[]>> ] = useState<Session[]>(quizzes.reduce((obj, quiz) => (
+        [ ...obj, ...quiz.sessions ]
+    ), [] as Session[]));
 
     return (
         <div className="min-h-screen pt-24 pb-16">
@@ -44,7 +46,7 @@ export default function MainSection({ quizzes, tab }: MainSectionProps): JSX.Ele
                             <QuizSection quizzes={quizzes} />
                         </TabsContent>
                         <TabsContent value="sessions">
-                            <SessionSection sessions={sessions} />
+                            <SessionSection sessions={sessions} setSessions={setSessions} />
                         </TabsContent>
                     </Tabs>
                 </motion.div>
