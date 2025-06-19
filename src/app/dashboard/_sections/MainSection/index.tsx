@@ -7,7 +7,8 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/Tabs';
 import QuizSection from '../QuizSection';
-import { type Quiz } from '../../page';
+import SessionSection from '../SessionSection';
+import type { Quiz, Session } from '../../page';
 
 type MainSectionProps = {
     quizzes: Quiz[];
@@ -16,6 +17,7 @@ type MainSectionProps = {
 
 export default function MainSection({ quizzes, tab }: MainSectionProps): JSX.Element {
     const [ activeTab, setActiveTab ]: [ string, Dispatch<SetStateAction<string>> ] = useState<string>(tab === 'sessions' ? 'sessions' : 'quizzes');
+    const sessions: Session[] = quizzes.reduce((obj, quiz) => [ ...obj, ...quiz.sessions ], [] as Session[]);
 
     return (
         <div className="min-h-screen pt-24 pb-16">
@@ -42,7 +44,7 @@ export default function MainSection({ quizzes, tab }: MainSectionProps): JSX.Ele
                             <QuizSection quizzes={quizzes} />
                         </TabsContent>
                         <TabsContent value="sessions">
-                            <h1>Sessions</h1>
+                            <SessionSection sessions={sessions} />
                         </TabsContent>
                     </Tabs>
                 </motion.div>
