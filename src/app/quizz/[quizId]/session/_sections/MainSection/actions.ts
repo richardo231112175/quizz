@@ -69,8 +69,7 @@ export async function createQuizSession(quizId: number, form: QuizSessionType, c
         });
 
         return { success: true };
-    } catch (error) {
-        console.error(error);
+    } catch {
         if (upload !== null && upload.success) {
             await supabase.storage.from('quizz').remove([ upload.path ]);
         }
