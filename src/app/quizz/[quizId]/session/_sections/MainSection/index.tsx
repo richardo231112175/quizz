@@ -3,8 +3,8 @@
 import { type JSX } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/Button';
+import { BackButton } from '@/components/BackButton';
 import SessionInformationForm from '../../_components/SessionInformationForm';
 import QuizSettingForm from '../../_components/QuizSettingForm';
 import QuestionConfigurationForm from '../../_components/QuestionConfigurationForm';
@@ -30,14 +30,14 @@ export default function MainSection({ quizId, counts }: MainSectionProps): JSX.E
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <div className="relative text-center mb-12">
-                        <Button variant="ghost" asChild className="absolute right-full top-0">
-                            <Link href="/dashboard">
-                                <ArrowLeft className="h-4 w-4 mr-2" /> Back to Dashboard
-                            </Link>
-                        </Button>
-                        <h1 className="text-4xl font-bold tracking-tight mb-4">Create Quiz Session</h1>
-                        <p className="text-lg text-muted-foreground">Configure the settings for your quiz session</p>
+                    <div className="text-center mb-12 space-y-4">
+                        <div className="text-left">
+                            <BackButton />
+                        </div>
+                        <div>
+                            <h1 className="text-4xl font-bold tracking-tight mb-4">Create Quiz Session</h1>
+                            <p className="text-lg text-muted-foreground">Configure the settings for your quiz session</p>
+                        </div>
                     </div>
                     <form onSubmit={handleSubmit}>
                         <AnimatePresence mode="wait">
