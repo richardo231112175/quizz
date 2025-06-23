@@ -84,10 +84,10 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
                             <div className="mt-4 flex flex-wrap items-center justify-between gap-4 text-sm">
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center shrink-0">
-                                        <Users className="h-4 w-4 mr-1" /> 10 participants
+                                        <Users className="h-4 w-4 mr-1" /> 10 plays
                                     </div>
                                     <div className="flex items-center shrink-0">
-                                        <Clock className="h-4 w-4 mr-1" /> {session.time_limit} minutes
+                                        <Clock className="h-4 w-4 mr-1" /> {session.time_limit} min
                                     </div>
                                 </div>
                             </div>
