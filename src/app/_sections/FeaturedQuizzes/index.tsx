@@ -1,14 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { type JSX } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Star, Users } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/Card';
 import { Button } from '@/components/Button';
-import { Badge } from '@/components/Badge';
-import { difficulties } from '@/lib/difficulties';
+import { QuizzCard } from '@/components/QuizzCard';
 import { useFeaturedQuizzes, type useFeaturedQuizzesType } from './hooks';
 
 export default function FeaturedQuizzes(): JSX.Element {
@@ -26,7 +22,7 @@ export default function FeaturedQuizzes(): JSX.Element {
                         <Link href="/browse">View All Quizzes</Link>
                     </Button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {quizzes.map((quiz, index) => (
                         <motion.div
                             key={quiz.id}
@@ -37,44 +33,7 @@ export default function FeaturedQuizzes(): JSX.Element {
                             onHoverStart={() => setHoveredIndex(index)}
                             onHoverEnd={() => setHoveredIndex(null)}
                         >
-                            <Link href={`/quizz/${quiz.id}`} className="block h-full">
-                                <Card className="overflow-hidden h-full transition-all hover:shadow-md">
-                                    <div className="relative h-48 overflow-hidden">
-                                        <Image src={quiz.image} alt={quiz.title} fill className="object-cover transition-transform duration-500 ease-in-out" style={{ transform: hoveredIndex === index ? 'scale(1.05)' : 'scale(1)' }} />
-                                        <div className="absolute top-2 right-2">
-                                            <Badge className={difficulties[quiz.difficulty as keyof typeof difficulties]}>
-                                                {quiz.difficulty}
-                                            </Badge>
-                                        </div>
-                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent h-1/3" />
-                                    </div>
-                                    <CardHeader className="pb-2">
-                                        <div className="flex justify-between items-start">
-                                            <Badge variant="outline" className="mb-2">{quiz.category}</Badge>
-                                            <div className="flex items-center">
-                                                <Star className="h-3.5 w-3.5 text-yellow-400 mr-1" fill="currentColor" />
-                                                <span className="text-xs font-medium">{quiz.rating}</span>
-                                            </div>
-                                        </div>
-                                        <CardTitle className="line-clamp-1">{quiz.title}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-2">
-                                        <div className="text-sm text-muted-foreground">
-                                            {quiz.questions} questions
-                                        </div>
-                                    </CardContent>
-                                    <CardFooter className="flex justify-between pt-0">
-                                        <div className="flex items-center text-xs text-muted-foreground">
-                                            <Clock className="h-3.5 w-3.5 mr-1" />
-                                            {quiz.timeEstimate}
-                                        </div>
-                                        <div className="flex items-center text-xs text-muted-foreground">
-                                            <Users className="h-3.5 w-3.5 mr-1" />
-                                            {quiz.plays.toLocaleString()} plays
-                                        </div>
-                                    </CardFooter>
-                                </Card>
-                            </Link>
+                            <QuizzCard quiz={quiz} hovered={hoveredIndex === index} />
                         </motion.div>
                     ))}
                 </div>
