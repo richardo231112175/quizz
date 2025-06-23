@@ -2,26 +2,13 @@
 
 import Link from 'next/link';
 import { type JSX } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/Button';
-import { categories } from '@/lib/categories';
 import { cn } from '@/lib/utils';
+import { useCategoriesSection, type useCategoriesSectionType } from './hooks';
 
 export default function CategoriesPage(): JSX.Element {
-    const container: Variants = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-            },
-        },
-    };
-
-    const item: Variants = {
-        hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0 },
-    };
+    const { container, item, categories }: useCategoriesSectionType = useCategoriesSection();
 
     return (
         <div className="min-h-screen pt-24 pb-16">
@@ -43,7 +30,7 @@ export default function CategoriesPage(): JSX.Element {
                                         <h2 className="text-2xl font-semibold mb-2">{category.name}</h2>
                                         <p className="text-muted-foreground mb-4">{category.description}</p>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-sm text-muted-foreground">{category.quizCount} quizzes</span>
+                                            <span className="text-sm text-muted-foreground">{category.count} quizzes</span>
                                             <Button variant="ghost" className="group-hover:translate-x-1 transition-transform duration-300 cursor-pointer">Explore →</Button>
                                         </div>
                                     </div>

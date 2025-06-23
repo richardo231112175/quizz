@@ -4,11 +4,10 @@ import Link from 'next/link';
 import { type JSX } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { categories } from '@/lib/categories';
 import { useCategoriesSection, type useCategoriesSectionType } from './hooks';
 
 export default function CategoriesSection(): JSX.Element {
-    const { container, item }: useCategoriesSectionType = useCategoriesSection();
+    const { container, item, categories }: useCategoriesSectionType = useCategoriesSection();
 
     return (
         <section className="py-16 md:py-24 bg-muted/50">
@@ -26,7 +25,7 @@ export default function CategoriesSection(): JSX.Element {
                                         <category.icon className="h-7 w-7 text-white" />
                                     </div>
                                     <h3 className="font-semibold mb-1">{category.name}</h3>
-                                    <p className="text-sm text-muted-foreground">{category.quizCount} quizzes</p>
+                                    <p className="text-sm text-muted-foreground">{category.count} quizzes</p>
                                 </motion.div>
                             </Link>
                         </motion.div>
