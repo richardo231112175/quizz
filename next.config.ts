@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
         },
     },
     images: {
-        domains: [ 'images.pexels.com' ],
+        domains: [ 'unwvmnaejybxmnfulqli.supabase.co' ],
     },
 };
 

@@ -15,7 +15,7 @@ export type quizType = {
     difficulty: QuizSessionDifficulty;
     category: QuizSessionCategory;
     visibility: QuizSessionVisibility;
-    time_limit: number;
+    timeLimit: number;
     plays: number;
     rating: number;
     ratingCount: number;
@@ -37,7 +37,11 @@ export function QuizzCard({ quiz, hovered }: QuizzCardProps): JSX.Element {
         <Link href={`/quizz/${quiz.id}`} className="block h-full">
             <Card className="overflow-hidden h-full transition-all hover:shadow-md">
                 <div className="relative h-48 overflow-hidden">
-                    <Image src={quiz.image || 'https://aquaphile.in/wp-content/uploads/2020/12/mobius-placeholder-4.png'} alt={quiz.title} fill className="object-cover transition-transform duration-500 ease-in-out" style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }} />
+                    {
+                        quiz.image !== null && (
+                            <Image src={`https://unwvmnaejybxmnfulqli.supabase.co/storage/v1/object/public/quizz//${quiz.image}`} alt={quiz.title} fill className="object-cover transition-transform duration-500 ease-in-out" style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }} />
+                        )
+                    }
                     <div className="absolute top-2 left-2">
                         <Badge variant="secondary">{formatText(quiz.category)}</Badge>
                     </div>
@@ -63,7 +67,7 @@ export function QuizzCard({ quiz, hovered }: QuizzCardProps): JSX.Element {
                             <Users className="h-4 w-4 mr-1" /> {quiz.plays} plays
                         </div>
                         <div className="flex items-center shrink-0">
-                            <Clock className="h-4 w-4 mr-1" /> {quiz.time_limit} min
+                            <Clock className="h-4 w-4 mr-1" /> {quiz.timeLimit} min
                         </div>
                     </div>
                     <div className="flex items-center text-xs text-muted-foreground">
