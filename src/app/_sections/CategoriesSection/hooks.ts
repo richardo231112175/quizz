@@ -1,7 +1,7 @@
 import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import { type Variants } from 'framer-motion';
 import { categories as libCategories, type categoryType } from '@/lib/categories';
-import { fetchCategory, type fetchCategoryReturn } from './actions';
+import { fetchCategory, type fetchCategoryReturn } from '@/lib/fetchCategory';
 
 export type categoriesType = categoryType & {
     count: number;

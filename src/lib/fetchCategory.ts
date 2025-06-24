@@ -1,6 +1,6 @@
 'use server';
 
-import { type QuizSessionCategory } from '../../../../generated';
+import { type QuizSessionCategory } from '../../generated';
 import { categories } from '@/lib/categories';
 import prisma from '@/lib/prisma';
 
