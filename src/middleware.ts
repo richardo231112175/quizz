@@ -1,10 +1,19 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { NextRequest } from 'next/server';
+import { createRouteMatcher, clerkMiddleware, type ClerkMiddlewareAuth } from '@clerk/nextjs/server';
 
-export default clerkMiddleware();
+type routeType = (req: NextRequest) => boolean;
 
-interface Config{
-    matcher:string[]
+type configType = {
+    matcher: string[];
 };
+
+const isProtectedRoute: routeType = createRouteMatcher([ '/dashboard(/.*)', '/create', '/quizz(/.*)', '/session(/.*)', '/history' ]);
+
+export default clerkMiddleware(async (auth: ClerkMiddlewareAuth, request: NextRequest): Promise<void> => {
+    if (isProtectedRoute(request)) {
+        await auth.protect();
+    }
+});
 
 export const config:Config = {
     matcher: [
