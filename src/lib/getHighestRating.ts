@@ -12,6 +12,8 @@ export type sessionsType = {
     image_url: string | null;
     open_time: Date;
     close_time: Date;
+    rating: number;
+    rating_count: number;
 };
 
 export type highestRating = {
@@ -29,7 +31,7 @@ export function getHighestRating(sessions: sessionsType[]): highestRating[] {
 
         const openPoint: number = (nowTime - openTime) / (1000 * 60) * 2;
         const durationPoint: number = (closeTime - openTime) / (1000 * 60) * -0.5;
-        const ratingPoint: number = 4.9 * 10 + 15;
+        const ratingPoint: number = session.rating * 10 + session.rating_count * 2 + 15;
         const imagePoint: number = session.image_url ? 50 : 0;
         const visibilityPoint: number = session.visibility === 'PUBLIC' ? 40 : 0;
         const playsPoint: number = 20 * 3;
@@ -46,8 +48,8 @@ export function getHighestRating(sessions: sessionsType[]): highestRating[] {
             visibility: session.visibility,
             timeLimit: session.time_limit,
             plays: 20,
-            rating: 4.9,
-            ratingCount: 15,
+            rating: session.rating,
+            ratingCount: session.rating_count,
         };
 
         return { quiz, point };

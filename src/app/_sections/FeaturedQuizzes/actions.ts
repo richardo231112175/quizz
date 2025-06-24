@@ -24,6 +24,8 @@ export async function fetchFeaturedQuizzes(): Promise<quizType[]> {
             time_limit: true,
             open_time: true,
             close_time: true,
+            rating: true,
+            rating_count: true,
         },
     });
 

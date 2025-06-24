@@ -14,6 +14,8 @@ type sessionsType2 = {
     title: string;
     description: string | null;
     image_url: string | null;
+    rating: number;
+    rating_count: number;
 };
 
 type fetchBrowseQuizzesProps = {
@@ -66,6 +68,8 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
                 time_limit: true,
                 open_time: true,
                 close_time: true,
+                rating: true,
+                rating_count: true,
             },
         });
 
@@ -82,7 +86,7 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
     }
 
     let orderBy: Record<string, string> = { id: 'desc' };
-    if (sort === 'rating') orderBy = { id: 'desc' }; // Not Done
+    if (sort === 'rating') orderBy = { rating: 'desc' };
     else if (sort === 'newest') orderBy = { id: 'desc' };
     else if (sort === 'oldest') orderBy = { id: 'asc' };
     else if (sort === 'shortest') orderBy = { time_limit: 'asc' };
@@ -102,6 +106,8 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
             category: true,
             visibility: true,
             time_limit: true,
+            rating: true,
+            rating_count: true,
         },
     });
 
@@ -115,8 +121,8 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
         visibility: session.visibility,
         timeLimit: session.time_limit,
         plays: 20,
-        rating: 4.9,
-        ratingCount: 15,
+        rating: session.rating,
+        ratingCount: session.rating_count,
     }));
 
     return {
