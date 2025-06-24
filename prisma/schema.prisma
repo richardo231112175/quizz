@@ -90,6 +90,8 @@ model QuizSession {
     open_ended      Int
     open_time       DateTime
     close_time      DateTime
+    rating          Float                 @default(0.00)
+    rating_count    Int                   @default(0)
     created_at      DateTime              @default(now())
 
     quiz            Quiz                  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
