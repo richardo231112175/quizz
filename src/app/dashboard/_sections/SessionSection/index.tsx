@@ -10,6 +10,7 @@ import { Dialog } from '@/components/Dialog';
 import { Button } from '@/components/Button';
 import DeleteConfirmDialog from '../../_components/DeleteConfirmDialog';
 import { difficulties } from '@/lib/difficulties';
+import { formatTime } from '@/lib/formatTime';
 import { useSessionSection, type useSessionSectionType } from './hooks';
 
 type SessionSectionProps = {
@@ -23,7 +24,6 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
         setOpenConfirmDialog,
         deletingIds,
         setDeleteId,
-        getDate,
         getStatus,
         deleteHandler,
     }: useSessionSectionType = useSessionSection({ sessions, setSessions });
@@ -93,7 +93,7 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
                             </div>
                             <div className="mt-4 flex items-center justify-end text-sm text-muted-foreground">
                                 <Clock className="h-4 w-4 mr-1" />
-                                {getDate(session.open_time)} - {getDate(session.close_time)}
+                                {formatTime(session.open_time)} - {formatTime(session.close_time)}
                             </div>
                         </CardContent>
                     </Card>

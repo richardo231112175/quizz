@@ -7,7 +7,6 @@ export type useSessionSectionType = {
     setOpenConfirmDialog: Dispatch<SetStateAction<boolean>>;
     deletingIds: number[];
     setDeleteId: Dispatch<SetStateAction<number>>;
-    getDate: (time: Date) => string;
     getStatus: (openTime: Date, closeTime: Date) => { status: string, className: string };
     deleteHandler: () => Promise<void>;
 };
@@ -21,17 +20,6 @@ export function useSessionSection({ sessions, setSessions }: useSessionSectionPr
     const [ openConfirmDialog, setOpenConfirmDialog ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ deleteId, setDeleteId ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
     const [ deletingIds, setDeletingIds ]: [ number[], Dispatch<SetStateAction<number[]>> ] = useState<number[]>([]);
-
-    function getDate(time: Date): string {
-        return new Date(time).toLocaleString('en-US', {
-            month: 'numeric',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            hour12: true,
-        });
-    }
 
     function getStatus(openTime: Date, closeTime: Date): { status: string, className: string } {
         const now: Date = new Date();
@@ -62,7 +50,6 @@ export function useSessionSection({ sessions, setSessions }: useSessionSectionPr
         setOpenConfirmDialog,
         deletingIds,
         setDeleteId,
-        getDate,
         getStatus,
         deleteHandler,
     };
