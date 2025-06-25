@@ -11,7 +11,7 @@ import { BackButton } from '@/components/BackButton';
 import { categories, type categoryType } from '@/lib/categories';
 import { useCategoriesSlug, type useCategoriesSlugType } from './hooks';
 
-export default function CategoryPage(): JSX.Element {
+export default function CategorysSlugPage(): JSX.Element {
     const params: Params = useParams();
     const slug: ParamValue = params.slug;
     const category: categoryType | undefined = categories.find((cat) => cat.id === slug);
