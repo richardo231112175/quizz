@@ -109,7 +109,7 @@ model Play {
     quiz_session_id Int
     final_score     Int          @default(0)
     max_score       Int
-    time_taken      Int          @default(0)
+    finish_time     DateTime
     start_time      DateTime     @default(now())
     end_time        DateTime
 
