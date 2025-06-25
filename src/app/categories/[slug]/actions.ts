@@ -39,6 +39,9 @@ export async function fetchQuizzesByCategories({ category, limit, offset }: fetc
             ratings: {
                 select: { rating: true },
             },
+            _count: {
+                select: { plays: true },
+            },
         },
     });
 

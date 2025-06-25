@@ -27,6 +27,9 @@ export async function fetchFeaturedQuizzes(): Promise<quizType[]> {
             ratings: {
                 select: { rating: true },
             },
+            _count: {
+                select: { plays: true },
+            },
         },
     });
 

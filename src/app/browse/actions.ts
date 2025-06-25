@@ -14,9 +14,8 @@ type sessionsType2 = {
     title: string;
     description: string | null;
     image_url: string | null;
-    ratings: {
-        rating: number;
-    }[];
+    ratings: { rating: number }[];
+    _count: { plays: number };
 };
 
 type fetchBrowseQuizzesProps = {
@@ -72,6 +71,9 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
                 ratings: {
                     select: { rating: true },
                 },
+                _count: {
+                    select: { plays: true },
+                },
             },
         });
 
@@ -110,6 +112,9 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
             ratings: {
                 select: { rating: true },
             },
+            _count: {
+                select: { plays: true },
+            },
         },
     });
 
@@ -126,7 +131,7 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
             category: session.category,
             visibility: session.visibility,
             timeLimit: session.time_limit,
-            plays: 20,
+            plays: session._count.plays,
             rating: Number(rating.toFixed(2)),
             ratingCount: ratingCount,
         };

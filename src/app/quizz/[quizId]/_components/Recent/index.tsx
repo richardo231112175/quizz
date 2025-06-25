@@ -21,7 +21,7 @@ export default function Recent({ users, plays }: RecentProps): JSX.Element {
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-                {users.map((user, index) => {
+                {users.length ? users.map((user, index) => {
                     const time: number = plays[index].finish_time.getTime();
                     const timeOffset: number = plays[index].finish_time.getTimezoneOffset() * 60000;
                     const distance: string = formatDistanceToNow(new Date(time + timeOffset), { addSuffix: true });
@@ -43,7 +43,7 @@ export default function Recent({ users, plays }: RecentProps): JSX.Element {
                             </Badge>
                         </div>
                     );
-                })}
+                }) : <span className="text-sm text-muted-foreground">No recent scores yet. Be the first to complete this quiz!</span>}
             </CardContent>
         </Card>
     );

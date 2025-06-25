@@ -12,9 +12,8 @@ export type rawSessionsType = {
     image_url: string | null;
     open_time: Date;
     close_time: Date;
-    ratings: {
-        rating: number;
-    }[];
+    ratings: { rating: number }[];
+    _count: { plays: number };
 };
 
 export type sessionsType = {
@@ -67,7 +66,7 @@ export function getHighestRating(sessions: rawSessionsType[]): highestRating[] {
             category: session.category,
             visibility: session.visibility,
             timeLimit: session.time_limit,
-            plays: 20,
+            plays: session._count.plays,
             rating: Number(rating.toFixed(2)),
             ratingCount: ratingCount,
         };

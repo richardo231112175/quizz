@@ -15,6 +15,7 @@ export type Session = {
     visibility: QuizSessionVisibility;
     open_time: Date;
     close_time: Date;
+    _count: { plays: number };
 };
 
 export type Quiz = {
@@ -55,6 +56,9 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
                     visibility: true,
                     open_time: true,
                     close_time: true,
+                    _count: {
+                        select: { plays: true },
+                    },
                 },
             },
             _count: {
