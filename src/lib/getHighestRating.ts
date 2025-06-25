@@ -32,11 +32,12 @@ export function getHighestRating(sessions: sessionsType[]): highestRating[] {
         const openPoint: number = (nowTime - openTime) / (1000 * 60) * 2;
         const durationPoint: number = (closeTime - openTime) / (1000 * 60) * -0.5;
         const ratingPoint: number = session.rating * 10 + session.rating_count * 2 + 15;
+        const descriptionPoint: number = session.description ? 30 : 0;
         const imagePoint: number = session.image_url ? 50 : 0;
         const visibilityPoint: number = session.visibility === 'PUBLIC' ? 40 : 0;
         const playsPoint: number = 20 * 3;
 
-        const point: number = openPoint + durationPoint + ratingPoint + imagePoint + visibilityPoint + playsPoint;
+        const point: number = openPoint + durationPoint + ratingPoint + descriptionPoint + imagePoint + visibilityPoint + playsPoint;
 
         const quiz: quizType = {
             id: session.id,
