@@ -61,13 +61,14 @@ model Question {
     type                    QuestionType
     time_limit              Int
     max_score               Int
-    single_choice_options   String?
-    single_choice_correct   String?
-    multiple_choice_options String?
-    multiple_choice_correct String?
-    open_ended_answer_key   String?
+    single_choice_options   String?      @db.Text
+    single_choice_correct   String?      @db.Text
+    multiple_choice_options String?      @db.Text
+    multiple_choice_correct String?      @db.Text
+    open_ended_answer_key   String?      @db.Text
 
     quiz                    Quiz         @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+    play_details            PlayDetail[]
 
     @@index([quiz_id])
     @@index([type])
@@ -95,9 +96,42 @@ model QuizSession {
     created_at      DateTime              @default(now())
 
     quiz            Quiz                  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+    plays           Play[]
 
     @@index([quiz_id])
     @@index([difficulty])
     @@index([category])
     @@index([visibility])
+}
+
+model Play {
+    id              Int          @id @default(autoincrement())
+    clerk_id        String
+    quiz_session_id Int
+    final_score     Int          @default(0)
+    max_score       Int
+    time_taken      Int          @default(0)
+    start_time      DateTime     @default(now())
+    end_time        DateTime
+
+    quiz_session    QuizSession  @relation(fields: [quiz_session_id], references: [id], onDelete: Cascade)
+    play_details    PlayDetail[]
+}
+
+model PlayDetail {
+    id          Int       @id @default(autoincrement())
+    clerk_id    String
+    play_id     Int
+    question_id Int
+    answer      String?   @db.Text
+    score       Int       @default(0)
+    time_taken  Int       @default(0)
+    start_time  DateTime?
+    end_time    DateTime?
+
+    play        Play      @relation(fields: [play_id], references: [id], onDelete: Cascade)
+    question    Question  @relation(fields: [question_id], references: [id], onDelete: Cascade)
+
+    @@index([play_id])
+    @@index([question_id])
 }
