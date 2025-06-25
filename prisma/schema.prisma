@@ -91,12 +91,11 @@ model QuizSession {
     open_ended      Int
     open_time       DateTime
     close_time      DateTime
-    rating          Float                 @default(0.00)
-    rating_count    Int                   @default(0)
     created_at      DateTime              @default(now())
 
     quiz            Quiz                  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
     plays           Play[]
+    ratings         Rating[]
 
     @@index([quiz_id])
     @@index([difficulty])
@@ -134,4 +133,13 @@ model PlayDetail {
 
     @@index([play_id])
     @@index([question_id])
+}
+
+model Rating {
+    id              Int         @id @default(autoincrement())
+    clerk_id        String
+    quiz_session_id Int
+    rating          Int
+
+    quiz_session    QuizSession @relation(fields: [quiz_session_id], references: [id], onDelete: Cascade)
 }

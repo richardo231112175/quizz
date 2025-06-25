@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "QuizSession" ADD COLUMN     "rating" DOUBLE PRECISION NOT NULL DEFAULT 0.00,
-ADD COLUMN     "rating_count" INTEGER NOT NULL DEFAULT 0;
