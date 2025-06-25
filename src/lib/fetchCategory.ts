@@ -15,8 +15,14 @@ export type fetchCategoryReturn = {
 };
 
 export async function fetchCategory(): Promise<fetchCategoryReturn[]> {
+    const now: Date = new Date();
+
     const counts: unknown = await prisma.quizSession.groupBy({
         by: [ 'category' ],
+        where: {
+            open_time: { lte: now },
+            close_time: { gte: now },
+        },
         _count: { category: true },
     });
 
