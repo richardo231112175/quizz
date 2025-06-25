@@ -5,10 +5,10 @@ import { type JSX } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/Button';
 import { cn } from '@/lib/utils';
-import { useCategoriesSection, type useCategoriesSectionType } from './hooks';
+import { useCategoriesPage, type useCategoriesPageType } from './hooks';
 
 export default function CategoriesPage(): JSX.Element {
-    const { container, item, categories }: useCategoriesSectionType = useCategoriesSection();
+    const { container, item, categories }: useCategoriesPageType = useCategoriesPage();
 
     return (
         <div className="min-h-screen pt-24 pb-16">

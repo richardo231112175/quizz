@@ -7,13 +7,13 @@ export type categoriesType = categoryType & {
     count: number;
 }
 
-export type useCategoriesSectionType = {
+export type useCategoriesPageType = {
     container: Variants;
     item: Variants;
     categories: categoriesType[];
 };
 
-export function useCategoriesSection(): useCategoriesSectionType {
+export function useCategoriesPage(): useCategoriesPageType {
     const [ categories, setCategories ]: [ categoriesType[], Dispatch<SetStateAction<categoriesType[]>> ] = useState<categoriesType[]>([]);
 
     useEffect(() => {
