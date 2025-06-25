@@ -2,11 +2,12 @@
 
 import { type JSX } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Share2 } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { BackButton } from '@/components/BackButton';
 import { Button } from '@/components/Button';
 import Hero from '../../_components/Hero';
 import Statistic from '../../_components/Statistic';
+import ShareButton from '../../_components/ShareButton';
 import Description from '../../_components/Description';
 import Author from '../../_components/Author';
 import Recent from '../../_components/Recent';
@@ -47,9 +48,7 @@ export default function MainSection({ quiz, author, authorQuizzes, recentUsers }
                                 <Button size="lg" onClick={() => {}} className="flex-1">
                                     <Play className="h-4 w-4 mr-2" /> Start Quiz
                                 </Button>
-                                <Button variant="outline" onClick={() => {}}>
-                                    <Share2 className="h-4 w-4 mr-2" /> Share
-                                </Button>
+                                <ShareButton />
                             </div>
                             <Description description={quiz.description} />
                             <Author author={author} quizCount={authorQuizzes} />
