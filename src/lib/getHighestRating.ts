@@ -1,6 +1,22 @@
 import { type quizType } from '@/components/QuizzCard';
 import type { QuizSessionCategory, QuizSessionDifficulty, QuizSessionVisibility } from '../../generated';
 
+export type rawSessionsType = {
+    category: QuizSessionCategory;
+    difficulty: QuizSessionDifficulty;
+    visibility: QuizSessionVisibility;
+    id: number;
+    time_limit: number;
+    title: string;
+    description: string | null;
+    image_url: string | null;
+    open_time: Date;
+    close_time: Date;
+    ratings: {
+        rating: number;
+    }[];
+};
+
 export type sessionsType = {
     category: QuizSessionCategory;
     difficulty: QuizSessionDifficulty;
@@ -21,7 +37,7 @@ export type highestRating = {
     point: number,
 };
 
-export function getHighestRating(sessions: sessionsType[]): highestRating[] {
+export function getHighestRating(sessions: rawSessionsType[]): highestRating[] {
     const now: Date = new Date();
 
     const scores: highestRating[] = sessions.map((session) => {
@@ -29,9 +45,12 @@ export function getHighestRating(sessions: sessionsType[]): highestRating[] {
         const closeTime: number = new Date(session.close_time).getTime();
         const nowTime: number = now.getTime();
 
+        const ratingCount: number = session.ratings.length;
+        const rating: number = session.ratings.length ? session.ratings.reduce((tot, rat) => tot + rat.rating, 0) / ratingCount : 0;
+
         const openPoint: number = (nowTime - openTime) / (1000 * 60) * 2;
         const durationPoint: number = (closeTime - openTime) / (1000 * 60) * -0.5;
-        const ratingPoint: number = session.rating * 10 + session.rating_count * 2 + 15;
+        const ratingPoint: number = rating * 10 + ratingCount * 2 + 15;
         const descriptionPoint: number = session.description ? 30 : 0;
         const imagePoint: number = session.image_url ? 50 : 0;
         const visibilityPoint: number = session.visibility === 'PUBLIC' ? 40 : 0;
@@ -49,8 +68,8 @@ export function getHighestRating(sessions: sessionsType[]): highestRating[] {
             visibility: session.visibility,
             timeLimit: session.time_limit,
             plays: 20,
-            rating: session.rating,
-            ratingCount: session.rating_count,
+            rating: rating,
+            ratingCount: ratingCount,
         };
 
         return { quiz, point };

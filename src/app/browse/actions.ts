@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { getHighestRating, type sessionsType, type highestRating } from '@/lib/getHighestRating';
+import { getHighestRating, type rawSessionsType, type highestRating } from '@/lib/getHighestRating';
 import { quizType } from '@/components/QuizzCard';
 import type { QuizSessionCategory, QuizSessionDifficulty, QuizSessionVisibility } from '../../../generated';
 
@@ -14,8 +14,9 @@ type sessionsType2 = {
     title: string;
     description: string | null;
     image_url: string | null;
-    rating: number;
-    rating_count: number;
+    ratings: {
+        rating: number;
+    }[];
 };
 
 type fetchBrowseQuizzesProps = {
@@ -55,7 +56,7 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
     }
 
     if (sort === 'popular') {
-        const sessions: sessionsType[] = await prisma.quizSession.findMany({
+        const sessions: rawSessionsType[] = await prisma.quizSession.findMany({
             where,
             select: {
                 id: true,
@@ -68,8 +69,9 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
                 time_limit: true,
                 open_time: true,
                 close_time: true,
-                rating: true,
-                rating_count: true,
+                ratings: {
+                    select: { rating: true },
+                },
             },
         });
 
@@ -86,8 +88,7 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
     }
 
     let orderBy: Record<string, string> = { id: 'desc' };
-    if (sort === 'rating') orderBy = { rating: 'desc' };
-    else if (sort === 'newest') orderBy = { id: 'desc' };
+    if (sort === 'newest') orderBy = { id: 'desc' };
     else if (sort === 'oldest') orderBy = { id: 'asc' };
     else if (sort === 'shortest') orderBy = { time_limit: 'asc' };
     else if (sort === 'longest') orderBy = { time_limit: 'desc' };
@@ -106,8 +107,9 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
             category: true,
             visibility: true,
             time_limit: true,
-            rating: true,
-            rating_count: true,
+            ratings: {
+                select: { rating: true },
+            },
         },
     });
 
@@ -121,8 +123,8 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
         visibility: session.visibility,
         timeLimit: session.time_limit,
         plays: 20,
-        rating: session.rating,
-        ratingCount: session.rating_count,
+        rating: session.ratings.length ? session.ratings.reduce((tot, rat) => tot + rat.rating, 0) / session.ratings.length : 0,
+        ratingCount: session.ratings.length,
     }));
 
     return {

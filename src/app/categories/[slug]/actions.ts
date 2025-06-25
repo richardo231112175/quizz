@@ -1,7 +1,7 @@
 'use server';
 
 import prisma from '@/lib/prisma';
-import { getHighestRating, type sessionsType, type highestRating } from '@/lib/getHighestRating';
+import { getHighestRating, type rawSessionsType, type highestRating } from '@/lib/getHighestRating';
 import type { quizType } from '@/components/QuizzCard';
 import type { QuizSessionCategory } from '../../../../generated';
 
@@ -19,7 +19,7 @@ export type fetchQuizzesByCategoriesReturn = {
 export async function fetchQuizzesByCategories({ category, limit, offset }: fetchQuizzesByCategoriesProps): Promise<fetchQuizzesByCategoriesReturn> {
     const now: Date = new Date();
 
-    const sessions: sessionsType[] = await prisma.quizSession.findMany({
+    const sessions: rawSessionsType[] = await prisma.quizSession.findMany({
         where: {
             category: category.toUpperCase() as QuizSessionCategory,
             open_time: { lte: now },
@@ -36,8 +36,9 @@ export async function fetchQuizzesByCategories({ category, limit, offset }: fetc
             time_limit: true,
             open_time: true,
             close_time: true,
-            rating: true,
-            rating_count: true,
+            ratings: {
+                select: { rating: true },
+            },
         },
     });
 

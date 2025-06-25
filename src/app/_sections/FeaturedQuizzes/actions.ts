@@ -2,12 +2,12 @@
 
 import { quizType } from '@/components/QuizzCard';
 import prisma from '@/lib/prisma';
-import { getHighestRating, type sessionsType, type highestRating } from '@/lib/getHighestRating';
+import { getHighestRating, type rawSessionsType, type highestRating } from '@/lib/getHighestRating';
 
 export async function fetchFeaturedQuizzes(): Promise<quizType[]> {
     const now: Date = new Date();
 
-    const sessions: sessionsType[] = await prisma.quizSession.findMany({
+    const sessions: rawSessionsType[] = await prisma.quizSession.findMany({
         where: {
             open_time: { lte: now },
             close_time: { gte: now },
@@ -24,8 +24,9 @@ export async function fetchFeaturedQuizzes(): Promise<quizType[]> {
             time_limit: true,
             open_time: true,
             close_time: true,
-            rating: true,
-            rating_count: true,
+            ratings: {
+                select: { rating: true },
+            },
         },
     });
 

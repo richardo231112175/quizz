@@ -43,7 +43,6 @@ export default function Filter({ setShowFilters, selectedCategory, setSelectedCa
 
     const sorts: sortType[] = [
         { value: 'popular', label: 'Most Popular' },
-        { value: 'rating', label: 'Highest Rated' },
         { value: 'latest', label: 'Latest' },
         { value: 'oldest', label: 'Oldest' },
         { value: 'shortest', label: 'Shortest' },
