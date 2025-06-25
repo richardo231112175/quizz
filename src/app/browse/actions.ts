@@ -113,19 +113,24 @@ export async function fetchBrowseQuizzes({ search, category, difficulty, sort, l
         },
     });
 
-    const quizzes: quizType[] = sessions.slice(0, limit).map((session) => ({
-        id: session.id,
-        title: session.title,
-        description: session.description,
-        image: session.image_url,
-        difficulty: session.difficulty,
-        category: session.category,
-        visibility: session.visibility,
-        timeLimit: session.time_limit,
-        plays: 20,
-        rating: session.ratings.length ? session.ratings.reduce((tot, rat) => tot + rat.rating, 0) / session.ratings.length : 0,
-        ratingCount: session.ratings.length,
-    }));
+    const quizzes: quizType[] = sessions.slice(0, limit).map((session) => {
+        const ratingCount: number = session.ratings.length;
+        const rating: number = session.ratings.length ? session.ratings.reduce((tot, rat) => tot + rat.rating, 0) / ratingCount : 0;
+
+        return {
+            id: session.id,
+            title: session.title,
+            description: session.description,
+            image: session.image_url,
+            difficulty: session.difficulty,
+            category: session.category,
+            visibility: session.visibility,
+            timeLimit: session.time_limit,
+            plays: 20,
+            rating: Number(rating.toFixed(2)),
+            ratingCount: ratingCount,
+        };
+    });
 
     return {
         quizzes,

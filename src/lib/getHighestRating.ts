@@ -68,7 +68,7 @@ export function getHighestRating(sessions: rawSessionsType[]): highestRating[] {
             visibility: session.visibility,
             timeLimit: session.time_limit,
             plays: 20,
-            rating: rating,
+            rating: Number(rating.toFixed(2)),
             ratingCount: ratingCount,
         };
 
