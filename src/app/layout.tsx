@@ -6,6 +6,7 @@ import { type ReactNode, type JSX } from 'react';
 import ClerkProvider from './_components/ClerkProvider';
 import ThemeProvider from './_components/ThemeProvider';
 import Navbar from './_components/Navbar';
+import UnfinishedQuiz from './_components/UnfinishedQuiz';
 import { cn } from '@/lib/utils';
 
 type AppLayoutProps = {
@@ -30,6 +31,7 @@ export default function AppLayout({ children }: AppLayoutProps): JSX.Element {
                             <main>
                                 {children}
                             </main>
+                            <UnfinishedQuiz />
                         </div>
                     </ClerkProvider>
                 </ThemeProvider>
