@@ -29,9 +29,9 @@ export type sessionType = {
     difficulty: QuizSessionDifficulty;
     visibility: QuizSessionVisibility;
     time_limit: number;
-    single_choice: number,
-    multiple_choice: number,
-    open_ended: number,
+    single_choice: number;
+    multiple_choice: number;
+    open_ended: number;
     created_at: Date;
     ratings: {
         rating: number;
