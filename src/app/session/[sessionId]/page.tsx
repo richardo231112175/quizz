@@ -1,9 +1,16 @@
+import type { Metadata, ResolvingMetadata } from 'next';
+import { type AbsoluteTemplateString } from 'next/dist/lib/metadata/types/metadata-types';
 import { notFound } from 'next/navigation';
 import { type JSX } from 'react';
 import { clerkClient, type User } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import type { QuizSessionCategory, QuizSessionDifficulty, QuizSessionVisibility } from '../../../../generated';
 import MainSection from './_sections/MainSection';
+
+type sessionMetadataType = {
+    title: string;
+    description: string | null;
+};
 
 export type playType = {
     clerk_id: string;
@@ -41,6 +48,26 @@ export type userType = {
 type SessionPageProps = {
     params: { sessionId: string };
 };
+
+export async function generateMetadata({ params }: SessionPageProps, parent: ResolvingMetadata): Promise<Metadata> {
+    const { sessionId }: { sessionId: string } = params;
+
+    const session: sessionMetadataType | null = await prisma.quizSession.findUnique({
+        where: { id: Number(sessionId) },
+        select: {
+            title: true,
+            description: true,
+        },
+    });
+
+    const prevTitle: AbsoluteTemplateString | null = (await parent).title;
+    const prevDesc: string | null =  (await parent).description;
+
+    return {
+        title: session?.title || prevTitle,
+        description: session?.description || prevDesc,
+    };
+}
 
 export default async function SessionPage({ params }: SessionPageProps): Promise<JSX.Element> {
     const { sessionId }: { sessionId: string } = params;
