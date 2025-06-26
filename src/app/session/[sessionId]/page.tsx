@@ -17,6 +17,7 @@ export type playType = {
     final_score: number;
     max_score: number;
     finish_time: Date | null;
+    end_time: Date;
 };
 
 export type sessionType = {
@@ -76,6 +77,8 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
         return notFound();
     }
 
+    const now: Date = new Date();
+
     const session: sessionType | null = await prisma.quizSession.findUnique({
         where: { id: Number(sessionId) },
         select: {
@@ -94,14 +97,23 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
             created_at: true,
             ratings: { select: { rating: true } },
             plays: {
-                where: { finish_time: { not: null } },
-                orderBy: { finish_time: 'desc' },
+                where: {
+                    OR: [
+                        { finish_time: { not: null } },
+                        { end_time: { lt: now } },
+                    ],
+                },
+                orderBy: [
+                    { finish_time: 'desc' },
+                    { end_time: 'desc' },
+                ],
                 take: 5,
                 select: {
                     clerk_id: true,
                     final_score: true,
                     max_score: true,
                     finish_time: true,
+                    end_time: true,
                 },
             },
             _count: {

@@ -22,8 +22,8 @@ export default function Recent({ users, plays }: RecentProps): JSX.Element {
             </CardHeader>
             <CardContent className="space-y-3">
                 {users.length ? users.map((user, index) => {
-                    const time: number = plays[index].finish_time!.getTime();
-                    const timeOffset: number = plays[index].finish_time!.getTimezoneOffset() * 60000;
+                    const time: number = plays[index].finish_time ? plays[index].finish_time.getTime() : plays[index].end_time.getTime();
+                    const timeOffset: number = plays[index].finish_time ? plays[index].finish_time.getTimezoneOffset() : plays[index].end_time.getTimezoneOffset();
                     const distance: string = formatDistanceToNow(new Date(time + timeOffset), { addSuffix: true });
 
                     return (
