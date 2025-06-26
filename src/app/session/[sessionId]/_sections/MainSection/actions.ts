@@ -91,11 +91,11 @@ export async function startQuizAction(sessionId: number, password: string): Prom
         const selectedMultiple: questionType[] = pickRandomQuestions<questionType>(multipleChoiceQuestions, result.multiple_choice);
         const selectedOpen: questionType[] = pickRandomQuestions<questionType>(openEndedQuestions, result.open_ended);
 
-        const selectedQuestions: questionType[] = [
+        const selectedQuestions: questionType[] = pickRandomQuestions<questionType>([
             ...selectedSingle,
             ...selectedMultiple,
             ...selectedOpen,
-        ];
+        ], result.single_choice + result.multiple_choice + result.open_ended);
 
         const maxScore: number = selectedQuestions.reduce((sum, q) => sum + (q.max_score || 0), 0);
         const startTime: Date = new Date();
@@ -118,8 +118,7 @@ export async function startQuizAction(sessionId: number, password: string): Prom
         });
 
         return 200;
-    } catch (error) {
-        console.log(error);
+    } catch {
         return 400;
     }
 }
