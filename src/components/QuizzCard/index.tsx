@@ -29,7 +29,7 @@ type QuizzCardProps = {
 
 export function QuizzCard({ quiz, hovered }: QuizzCardProps): JSX.Element {
     return (
-        <Link href={`/quizz/${quiz.id}`} className="block h-full">
+        <Link href={`/session/${quiz.id}`} className="block h-full">
             <Card className="overflow-hidden h-full transition-all hover:shadow-md">
                 <div className="relative h-48 overflow-hidden">
                     {

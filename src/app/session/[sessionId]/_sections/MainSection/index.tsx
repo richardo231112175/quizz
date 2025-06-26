@@ -13,11 +13,11 @@ import Author from '../../_components/Author';
 import Recent from '../../_components/Recent';
 import QuizStatistic from '../../_components/QuizStatistic';
 import RelatedQuizzes from '../../_components/RelatedQuizzes';
-import type { quizType, userType } from '../../page';
+import type { sessionType, userType } from '../../page';
 import { formatText } from '@/lib/formatText';
 
 type MainSectionProps = {
-    quiz: quizType;
+    quiz: sessionType;
     author: userType;
     authorQuizzes: number;
     recentUsers: userType[];

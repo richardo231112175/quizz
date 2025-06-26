@@ -12,7 +12,7 @@ export type playType = {
     finish_time: Date;
 };
 
-export type quizType = {
+export type sessionType = {
     id: number;
     clerk_id: string;
     title: string;
@@ -38,19 +38,19 @@ export type userType = {
     imageUrl: string;
 };
 
-type QuizzPageProps = {
-    params: { quizId: string };
+type SessionPageProps = {
+    params: { sessionId: string };
 };
 
-export default async function QuizzPage({ params }: QuizzPageProps): Promise<JSX.Element> {
-    const { quizId }: { quizId: string } = params;
+export default async function SessionPage({ params }: SessionPageProps): Promise<JSX.Element> {
+    const { sessionId }: { sessionId: string } = params;
 
-    if (isNaN(Number(quizId))) {
+    if (isNaN(Number(sessionId))) {
         return notFound();
     }
 
-    const quiz: quizType | null = await prisma.quizSession.findUnique({
-        where: { id: Number(quizId) },
+    const session: sessionType | null = await prisma.quizSession.findUnique({
+        where: { id: Number(sessionId) },
         select: {
             id: true,
             clerk_id: true,
@@ -82,17 +82,17 @@ export default async function QuizzPage({ params }: QuizzPageProps): Promise<JSX
         },
     });
 
-    if (!quiz) {
+    if (!session) {
         return notFound();
     }
 
     const [ author, authorQuizzes, recentUsers ]: [ userType, number, userType[] ] = await Promise.all([
-        processUser(quiz.clerk_id),
-        processAuthorQuizzes(quiz.clerk_id),
-        processRecentUsers(quiz.plays),
+        processUser(session.clerk_id),
+        processAuthorQuizzes(session.clerk_id),
+        processRecentUsers(session.plays),
     ]);
 
-    return <MainSection quiz={quiz} author={author} authorQuizzes={authorQuizzes} recentUsers={recentUsers} />;
+    return <MainSection quiz={session} author={author} authorQuizzes={authorQuizzes} recentUsers={recentUsers} />;
 }
 
 async function processUser(clerkId: string): Promise<userType> {

@@ -5,10 +5,10 @@ import { Card } from '@/components/Card';
 import { Badge } from '@/components/Badge';
 import { difficulties } from '@/lib/difficulties';
 import { formatText } from '@/lib/formatText';
-import { quizType } from '../../page';
+import { sessionType } from '../../page';
 
 type HeroProps = {
-    quiz: quizType;
+    quiz: sessionType;
     difficulty: string;
     ratingCount: number;
     rating: number;
