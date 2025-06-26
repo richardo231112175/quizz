@@ -9,7 +9,7 @@ export type playType = {
     clerk_id: string;
     final_score: number;
     max_score: number;
-    finish_time: Date;
+    finish_time: Date | null;
 };
 
 export type sessionType = {
@@ -67,6 +67,7 @@ export default async function SessionPage({ params }: SessionPageProps): Promise
             created_at: true,
             ratings: { select: { rating: true } },
             plays: {
+                where: { finish_time: { not: null } },
                 orderBy: { finish_time: 'desc' },
                 take: 5,
                 select: {

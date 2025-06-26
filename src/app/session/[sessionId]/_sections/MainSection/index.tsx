@@ -13,8 +13,10 @@ import Author from '../../_components/Author';
 import Recent from '../../_components/Recent';
 import QuizStatistic from '../../_components/QuizStatistic';
 import RelatedQuizzes from '../../_components/RelatedQuizzes';
+import PasswordDialog from '../../_components/PasswordDialog';
 import type { sessionType, userType } from '../../page';
 import { formatText } from '@/lib/formatText';
+import { useQuiz, type useQuizType } from './hooks';
 
 type MainSectionProps = {
     quiz: sessionType;
@@ -24,6 +26,8 @@ type MainSectionProps = {
 };
 
 export default function MainSection({ quiz, author, authorQuizzes, recentUsers }: MainSectionProps): JSX.Element {
+    const { pwd, setPwd, showPwd, setShowPwd, showPwdError, isStarting, startQuiz }: useQuizType = useQuiz(quiz.id);
+
     const difficulty: string = formatText(quiz.difficulty);
     const ratingCount: number = quiz.ratings.length;
     const rating: number = ratingCount ? quiz.ratings.reduce((tot, rat) => tot + rat.rating, 0) / ratingCount : 0;
@@ -45,7 +49,7 @@ export default function MainSection({ quiz, author, authorQuizzes, recentUsers }
                             <Hero quiz={quiz} difficulty={difficulty} ratingCount={ratingCount} rating={rating} />
                             <Statistic questionCount={questionCount} timeLimit={quiz.time_limit} difficulty={difficulty} rating={rating} />
                             <div className="flex flex-wrap gap-3">
-                                <Button size="lg" onClick={() => {}} className="flex-1">
+                                <Button size="lg" onClick={startQuiz} disabled={isStarting} className="flex-1">
                                     <Play className="h-4 w-4 mr-2" /> Start Quiz
                                 </Button>
                                 <ShareButton />
@@ -61,6 +65,15 @@ export default function MainSection({ quiz, author, authorQuizzes, recentUsers }
                     </div>
                 </motion.div>
             </div>
+            <PasswordDialog
+                pwd={pwd}
+                setPwd={setPwd}
+                showPwd={showPwd}
+                setShowPwd={setShowPwd}
+                showPwdError={showPwdError}
+                isStarting={isStarting}
+                startQuiz={startQuiz}
+            />
         </div>
     );
 }
