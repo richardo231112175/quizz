@@ -11,7 +11,6 @@ export async function fetchFeaturedQuizzes(): Promise<quizType[]> {
         where: {
             open_time: { lte: now },
             close_time: { gte: now },
-            visibility: 'PUBLIC',
         },
         select: {
             id: true,

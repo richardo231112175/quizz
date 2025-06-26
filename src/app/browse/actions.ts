@@ -33,7 +33,7 @@ export type fetchBrowseQuizzesReturn = {
 };
 
 export async function fetchBrowseQuizzes({ search, category, difficulty, sort, limit, offset }: fetchBrowseQuizzesProps): Promise<fetchBrowseQuizzesReturn> {
-    const where: Record<string, unknown> = { visibility: 'PUBLIC' };
+    const where: Record<string, unknown> = {};
     const now: Date = new Date();
 
     where.open_time = { lte: now };
