@@ -51,7 +51,7 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => router.push(`/session/${session.id}`)} disabled={deletingIds.includes(session.id)}>
+                                    <DropdownMenuItem onClick={() => router.push(`/session/${session.id}/detail`)} disabled={deletingIds.includes(session.id)}>
                                         <Eye className="h-4 w-4 mr-2" /> View Details
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => router.push(`/session/${session.id}/edit`)} disabled={deletingIds.includes(session.id)}>
