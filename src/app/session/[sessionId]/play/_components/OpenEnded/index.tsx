@@ -7,9 +7,10 @@ type OpenEndedProps = {
     answer: string | null;
     setAnswer: (answer: string) => void;
     correctAnswer: string | null;
+    isSubmitting: boolean;
 };
 
-export default function OpenEnded({ answer, setAnswer, correctAnswer }: OpenEndedProps): JSX.Element {
+export default function OpenEnded({ answer, setAnswer, correctAnswer, isSubmitting }: OpenEndedProps): JSX.Element {
     return (
         <>
             <div className="space-y-4">
@@ -17,7 +18,7 @@ export default function OpenEnded({ answer, setAnswer, correctAnswer }: OpenEnde
                     value={answer ?? ''}
                     onChange={(e) => setAnswer(e.target.value)}
                     placeholder="Type your answer here..."
-                    disabled={!!correctAnswer}
+                    disabled={!!correctAnswer || isSubmitting}
                     className="min-h-[120px] resize-none"
                 />
             </div>

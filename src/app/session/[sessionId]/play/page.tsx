@@ -23,7 +23,10 @@ type QuestionType = {
     time_limit: number,
     max_score: number,
     single_choice_options: string | null,
+    single_choice_correct: string | null,
     multiple_choice_options: string | null,
+    multiple_choice_correct: string | null,
+    open_ended_answer_key: string | null,
 };
 
 type PlayDetail = {
@@ -43,6 +46,7 @@ export type Play = {
     max_score: number;
     start_time: Date;
     end_time: Date;
+    quiz_session: { title: string };
     play_details: PlayDetail[];
 }
 
@@ -94,7 +98,11 @@ export default async function PlayPage({ params }: PlayPageProps): Promise<JSX.E
             max_score: true,
             start_time: true,
             end_time: true,
+            quiz_session: {
+                select: { title: true },
+            },
             play_details: {
+                orderBy: { id: 'asc' },
                 select: {
                     id: true,
                     question_id: true,
@@ -111,7 +119,10 @@ export default async function PlayPage({ params }: PlayPageProps): Promise<JSX.E
                             time_limit: true,
                             max_score: true,
                             single_choice_options: true,
+                            single_choice_correct: true,
                             multiple_choice_options: true,
+                            multiple_choice_correct: true,
+                            open_ended_answer_key: true,
                         },
                     },
                 },

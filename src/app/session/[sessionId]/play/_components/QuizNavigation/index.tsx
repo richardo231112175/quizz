@@ -5,12 +5,11 @@ import { Button } from '@/components/Button';
 type QuizNavigationProps = {
     current: number;
     setCurrent: Dispatch<SetStateAction<number>>;
-    totalQuestion: number;
+    fetchingQuestion: boolean;
+    handleNextQuestion: (index?: number) => Promise<void>;
 };
 
-export default function QuizNavigation({ current, setCurrent, totalQuestion }: QuizNavigationProps): JSX.Element {
-    const isLastQuestion: boolean = totalQuestion - 1 === current;
-
+export default function QuizNavigation({ current, setCurrent, fetchingQuestion, handleNextQuestion }: QuizNavigationProps): JSX.Element {
     return (
         <div className="flex justify-between">
             <Button
@@ -20,9 +19,8 @@ export default function QuizNavigation({ current, setCurrent, totalQuestion }: Q
             >
                 <ArrowLeft className="h-4 w-4 mr-2" /> Previous
             </Button>
-            <Button onClick={() => setCurrent((prev) => Math.min(totalQuestion - 1, prev + 1))}>
-                {isLastQuestion ? 'Finish Quiz' : 'Next Question'}
-                {!isLastQuestion && <ArrowRight className="h-4 w-4 ml-2" />}
+            <Button disabled={fetchingQuestion} onClick={() => handleNextQuestion()}>
+                Next Question <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
         </div>
     );
