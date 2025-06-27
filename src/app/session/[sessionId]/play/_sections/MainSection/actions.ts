@@ -111,16 +111,14 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
         const ratio: number = Math.min(timeTaken / timeLimit, 1);
 
         let timeFactor: number;
-        if (ratio <= 0.2) {
+        if (ratio <= 0.4) {
             timeFactor = 1;
-        } else if (ratio <= 0.4) {
+        } else if (ratio <= 0.7) {
             timeFactor = 0.8;
-        } else if (ratio <= 0.6) {
+        } else if (ratio <= 0.9) {
             timeFactor = 0.6;
-        } else if (ratio <= 0.8) {
-            timeFactor = 0.4;
         } else {
-            timeFactor = 0.2;
+            timeFactor = 0.4;
         }
 
         const correctnessScore: number = await checkScoreCorrectness(question, answer);
