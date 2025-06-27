@@ -61,10 +61,11 @@ type Question2 = {
         multiple_choice_correct: string | null;
         open_ended_answer_key: string | null;
     };
-    play: {
-        id: number;
-        final_score: number;
-    };
+    play: { id: number };
+};
+
+type aggregateType = {
+    _sum: { score: number | null };
 };
 
 export type submitAnswerReturn = {
@@ -92,10 +93,7 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
                     },
                 },
                 play: {
-                    select: {
-                        id: true,
-                        final_score: true,
-                    },
+                    select: { id: true },
                 },
             },
         });
@@ -117,8 +115,10 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
             timeFactor = 0.8;
         } else if (ratio <= 0.9) {
             timeFactor = 0.6;
-        } else {
+        } else if (ratio < 1) {
             timeFactor = 0.4;
+        } else {
+            timeFactor = 0;
         }
 
         const correctnessScore: number = await checkScoreCorrectness(question, answer);
@@ -133,11 +133,15 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
             },
         });
 
+        const aggregate: aggregateType = await prisma.playDetail.aggregate({
+            _sum: { score: true },
+            where: { play_id: question.play.id },
+        });
+        const totalScore: number = aggregate._sum.score ?? 0;
+
         await prisma.play.update({
             where: { id: question.play.id },
-            data: {
-                final_score: question.play.final_score + finalScore,
-            },
+            data: { final_score: totalScore },
         });
 
         return {
