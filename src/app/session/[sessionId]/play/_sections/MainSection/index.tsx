@@ -52,6 +52,7 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                         <QuizNavigation
                             current={current}
                             setCurrent={setCurrent}
+                            totalQuestion={play.play_details.length}
                             fetchingQuestion={fetchingQuestion}
                             handleNextQuestion={handleNextQuestion}
                         />

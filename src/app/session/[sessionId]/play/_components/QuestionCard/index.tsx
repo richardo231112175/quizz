@@ -32,11 +32,18 @@ export default function QuestionCard({ questions, setQuestions, current, questio
                     <CardTitle className="text-lg">
                         Question {current + 1}
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        <span className="text-sm font-mono">
-                            {questions[current].answered ? formatCountDown(questions[current].timeTaken) : formatCountDown(questionTime)}
-                        </span>
+                    <div className="flex items-center gap-4 md:gap-8">
+                        <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4" />
+                            <span className="text-sm font-mono">
+                                {questions[current].answered ? formatCountDown(questions[current].timeTaken) : formatCountDown(questionTime)}
+                            </span>
+                        </div>
+                        {questions[current].answered && (
+                            <div className="text-sm font-mono text-right">
+                                Score: <span className="font-semibold">{questions[current].score}</span> / {questions[current].maxScore}
+                            </div>
+                        )}
                     </div>
                 </div>
             </CardHeader>
