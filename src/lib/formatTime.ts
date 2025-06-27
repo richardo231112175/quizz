@@ -8,3 +8,9 @@ export function formatTime(time: Date): string {
         hour12: true,
     });
 }
+
+export function formatCountDown(seconds: number): string {
+    const mins: number = Math.floor(seconds / 60);
+    const secs: number = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
