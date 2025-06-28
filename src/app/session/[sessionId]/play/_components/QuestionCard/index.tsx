@@ -7,7 +7,7 @@ import MultipleChoice from '../MultipleChoice';
 import OpenEnded from '../OpenEnded';
 import { type Questions } from '../../_sections/MainSection/hooks';
 import { useQuestionCard, type useQuestionCardType } from './hooks';
-import { formatCountDown } from '@/lib/formatTime';
+import { formatTimeSpent, formatCountDown } from '@/lib/formatTime';
 
 type QuestionCardProps = {
     questions: Questions[];
@@ -36,7 +36,7 @@ export default function QuestionCard({ questions, setQuestions, current, questio
                         <div className="flex items-center gap-2">
                             <Clock className="h-4 w-4" />
                             <span className="text-sm font-mono">
-                                {questions[current].answered ? formatCountDown(questions[current].timeTaken) : formatCountDown(questionTime)}
+                                {questions[current].answered ? formatTimeSpent(questions[current].timeTaken) : formatCountDown(questionTime)}
                             </span>
                         </div>
                         {questions[current].answered && (
