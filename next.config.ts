@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     images: {
         domains: [ 'img.clerk.com', 'unwvmnaejybxmnfulqli.supabase.co', 'images.pexels.com' ],
     },
+    reactStrictMode: true,
 };
 
 export default nextConfig;
