@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation';
 import { type AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { type JSX, type Dispatch, type SetStateAction } from 'react';
 import { type Session } from '../../page';
-import { Lock, MoreHorizontal, Eye, Edit, Trash2, Clock, Users } from 'lucide-react';
+import { Lock, MoreHorizontal, Eye, Trash2, Clock, Users } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/Card';
 import { Badge } from '@/components/Badge';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/DropdownMenu';
@@ -54,9 +54,6 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
                                 <DropdownMenuContent align="end">
                                     <DropdownMenuItem onClick={() => router.push(`/session/${session.id}/detail`)} disabled={deletingIds.includes(session.id)}>
                                         <Eye className="h-4 w-4 mr-2" /> View Details
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => router.push(`/session/${session.id}/edit`)} disabled={deletingIds.includes(session.id)}>
-                                        <Edit className="h-4 w-4 mr-2" /> Edit Session
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onClick={() => {
