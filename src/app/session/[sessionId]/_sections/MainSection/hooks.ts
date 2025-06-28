@@ -31,6 +31,7 @@ export function useQuiz(sessionId: number): useQuizType {
 
         if (started === 200) {
             router.replace(`/session/${sessionId}/play`);
+            return;
         } else if (started === 401) {
             setShowPwd(true);
             setShowPwdError(true);
