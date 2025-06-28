@@ -26,6 +26,7 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
         handleNextQuestion,
         isFinished,
         finishTime,
+        playId,
     }: usePlayQuizType = usePlayQuiz(play);
 
     return (
@@ -60,6 +61,7 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                             fetchingQuestion={fetchingQuestion}
                             handleNextQuestion={handleNextQuestion}
                             isFinished={isFinished}
+                            playId={playId}
                         />
                     )}
                 </motion.div>

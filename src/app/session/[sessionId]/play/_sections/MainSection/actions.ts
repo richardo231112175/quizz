@@ -74,6 +74,7 @@ export type submitAnswerReturn = {
     correctAnswer: string | string[];
     isFinished: boolean;
     finishTime?: number;
+    playId: number;
 };
 
 export async function submitAnswer(id: number, answer: string | string[] | null): Promise<submitAnswerReturn | void> {
@@ -161,6 +162,7 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
         const isFinished: boolean = finishedPlayDetailsCount === playDetailsCount;
 
         type resultType = {
+            id: number;
             start_time: Date;
             end_time: Date;
             finish_time: Date | null;
@@ -173,6 +175,7 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
                 ...(isFinished ? { finish_time: new Date() } : {}),
             },
             select: {
+                id: true,
                 start_time: true,
                 end_time: true,
                 finish_time: true,
@@ -194,6 +197,7 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
                     : question.question.open_ended_answer_key!,
             isFinished: isFinished2,
             finishTime: isFinished2 ? finishedTime !== null ? finishedTime : questionTime : undefined,
+            playId: result.id,
         };
     } catch {}
 }

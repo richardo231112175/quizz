@@ -73,6 +73,7 @@ export type usePlayQuizType = {
     handleNextQuestion: (index?: number) => Promise<void>;
     isFinished: boolean;
     finishTime: number;
+    playId: number;
 };
 
 export function usePlayQuiz(play: Play): usePlayQuizType {
@@ -84,6 +85,7 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
     const [ isSubmitting, setIsSubmitting ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ isFinished, setIsFinished ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ finishTime, setFinishTime ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
+    const [ playId, setPlayId ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
 
     const handleSubmit: () => Promise<void> = useCallback(async () => {
         if (isSubmitting) return;
@@ -118,6 +120,7 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
             if (result.isFinished) {
                 setIsFinished(true);
                 setFinishTime(result.finishTime!);
+                setPlayId(result.playId);
             }
         }
 
@@ -204,6 +207,7 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
         handleNextQuestion,
         isFinished,
         finishTime,
+        playId,
     };
 }
 
