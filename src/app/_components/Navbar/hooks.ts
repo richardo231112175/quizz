@@ -48,7 +48,6 @@ export function useNavbar(): useNavbarType {
         { href: '/create', label: 'Create', authenticated: false },
         { href: '/browse', label: 'Browse', authenticated: false },
         { href: '/categories', label: 'Categories', authenticated: false },
-        ...(isSignedIn ? [ { href: '/history', label: 'History', authenticated: true } ] : []),
     ];
 
     return {

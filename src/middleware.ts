@@ -12,7 +12,6 @@ const isProtectedRoute: routeType = createRouteMatcher([
     '/create',
     '/quizz(/.*)',
     '/session/([^/]+)(/.*)',
-    '/history',
 ]);
 
 export default clerkMiddleware(async (auth: ClerkMiddlewareAuth, request: NextRequest): Promise<void> => {
