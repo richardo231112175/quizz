@@ -71,6 +71,8 @@ export type usePlayQuizType = {
     handleSubmit: () => Promise<void>;
     fetchingQuestion: boolean;
     handleNextQuestion: (index?: number) => Promise<void>;
+    isFinished: boolean;
+    finishTime: number;
 };
 
 export function usePlayQuiz(play: Play): usePlayQuizType {
@@ -80,6 +82,8 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
     const [ questionTime, setQuestionTime ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
     const [ fetchingQuestion, setFetchingQuestion ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ isSubmitting, setIsSubmitting ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
+    const [ isFinished, setIsFinished ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
+    const [ finishTime, setFinishTime ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
 
     const handleSubmit: () => Promise<void> = useCallback(async () => {
         if (isSubmitting) return;
@@ -110,6 +114,11 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
                     correctAnswer: result.correctAnswer as string,
                 };
             }));
+
+            if (result.isFinished) {
+                setIsFinished(true);
+                setFinishTime(result.finishTime!);
+            }
         }
 
         setIsSubmitting(false);
@@ -121,7 +130,7 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
         const interval: NodeJS.Timeout = setInterval(() => {
             setTotalTime((prev) => {
                 if (prev <= 1) {
-                    // Complete quiz
+                    handleSubmit();
                     return 0;
                 }
 
@@ -130,7 +139,7 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
         }, 1000);
 
         return (): void => clearInterval(interval);
-    }, [ totalTime ]);
+    }, [ totalTime, handleSubmit ]);
 
     useEffect(() => {
         if (questionTime <= 0) return;
@@ -193,6 +202,8 @@ export function usePlayQuiz(play: Play): usePlayQuizType {
         handleSubmit,
         fetchingQuestion,
         handleNextQuestion,
+        isFinished,
+        finishTime,
     };
 }
 

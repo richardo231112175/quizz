@@ -24,6 +24,8 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
         handleSubmit,
         fetchingQuestion,
         handleNextQuestion,
+        isFinished,
+        finishTime,
     }: usePlayQuizType = usePlayQuiz(play);
 
     return (
@@ -39,6 +41,8 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                         totalTime={totalTime}
                         current={current}
                         totalQuestion={play.play_details.length}
+                        isFinished={isFinished}
+                        finishTime={finishTime}
                     />
                     <QuestionCard
                         questions={questions}
@@ -55,6 +59,7 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                             totalQuestion={play.play_details.length}
                             fetchingQuestion={fetchingQuestion}
                             handleNextQuestion={handleNextQuestion}
+                            isFinished={isFinished}
                         />
                     )}
                 </motion.div>

@@ -72,6 +72,8 @@ export type submitAnswerReturn = {
     timeTaken: number;
     score: number;
     correctAnswer: string | string[];
+    isFinished: boolean;
+    finishTime?: number;
 };
 
 export async function submitAnswer(id: number, answer: string | string[] | null): Promise<submitAnswerReturn | void> {
@@ -115,10 +117,8 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
             timeFactor = 0.8;
         } else if (ratio <= 0.9) {
             timeFactor = 0.6;
-        } else if (ratio < 1) {
-            timeFactor = 0.4;
         } else {
-            timeFactor = 0;
+            timeFactor = 0.4;
         }
 
         const correctnessScore: number = await checkScoreCorrectness(question, answer);
@@ -133,16 +133,56 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
             },
         });
 
-        const aggregate: aggregateType = await prisma.playDetail.aggregate({
-            _sum: { score: true },
-            where: { play_id: question.play.id },
-        });
-        const totalScore: number = aggregate._sum.score ?? 0;
+        const [
+            aggregate,
+            playDetailsCount,
+            finishedPlayDetailsCount,
+        ]: [
+            aggregateType,
+            number,
+            number,
+        ] = await Promise.all([
+            prisma.playDetail.aggregate({
+                _sum: { score: true },
+                where: { play_id: question.play.id },
+            }),
+            prisma.playDetail.count({
+                where: { play_id: question.play.id },
+            }),
+            prisma.playDetail.count({
+                where: {
+                    play_id: question.play.id,
+                    end_time: { not: null },
+                },
+            }),
+        ]);
 
-        await prisma.play.update({
+        const totalScore: number = aggregate._sum.score ?? 0;
+        const isFinished: boolean = finishedPlayDetailsCount === playDetailsCount;
+
+        type resultType = {
+            start_time: Date;
+            end_time: Date;
+            finish_time: Date | null;
+        }
+
+        const result: resultType | null = await prisma.play.update({
             where: { id: question.play.id },
-            data: { final_score: totalScore },
+            data: {
+                final_score: totalScore,
+                ...(isFinished ? { finish_time: new Date() } : {}),
+            },
+            select: {
+                start_time: true,
+                end_time: true,
+                finish_time: true,
+            },
         });
+
+        const now2: Date = new Date();
+        const isFinished2: boolean = isFinished || now2 >= result.end_time || result.finish_time !== null;
+        const questionTime: number = Math.floor((result.end_time.getTime() - result.start_time.getTime()) / 1000);
+        const finishedTime: number | null = result.finish_time ? Math.floor((result.finish_time.getTime() - result.start_time.getTime()) / 1000) : null;
 
         return {
             timeTaken: timeTaken,
@@ -152,6 +192,8 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
                 : question.question.type === 'MULTIPLE_CHOICE'
                     ? JSON.parse(question.question.multiple_choice_correct!)
                     : question.question.open_ended_answer_key!,
+            isFinished: isFinished2,
+            finishTime: isFinished2 ? finishedTime !== null ? finishedTime : questionTime : undefined,
         };
     } catch {}
 }

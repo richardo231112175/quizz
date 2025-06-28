@@ -8,9 +8,10 @@ type QuizNavigationProps = {
     totalQuestion: number;
     fetchingQuestion: boolean;
     handleNextQuestion: (index?: number) => Promise<void>;
+    isFinished: boolean;
 };
 
-export default function QuizNavigation({ current, setCurrent, totalQuestion, fetchingQuestion, handleNextQuestion }: QuizNavigationProps): JSX.Element {
+export default function QuizNavigation({ current, setCurrent, totalQuestion, fetchingQuestion, handleNextQuestion, isFinished }: QuizNavigationProps): JSX.Element {
     const isLastQuestion: boolean = totalQuestion - 1 === current;
 
     return (
@@ -22,10 +23,15 @@ export default function QuizNavigation({ current, setCurrent, totalQuestion, fet
             >
                 <ArrowLeft className="h-4 w-4 mr-2" /> Previous
             </Button>
-            <Button disabled={fetchingQuestion} onClick={() => handleNextQuestion()}>
-                {isLastQuestion ? 'View Result' : 'Next Question'}
-                {!isLastQuestion && <ArrowRight className="h-4 w-4 ml-2" />}
-            </Button>
+            {isLastQuestion || isFinished ? (
+                <Button onClick={() => {}}>
+                    View result
+                </Button>
+            ) : (
+                <Button disabled={fetchingQuestion} onClick={() => handleNextQuestion()}>
+                    Next Question <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+            )}
         </div>
     );
 }
