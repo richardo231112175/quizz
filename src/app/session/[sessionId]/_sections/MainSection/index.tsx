@@ -12,7 +12,6 @@ import Description from '../../_components/Description';
 import Author from '../../_components/Author';
 import Recent from '../../_components/Recent';
 import QuizStatistic from '../../_components/QuizStatistic';
-import RelatedQuizzes from '../../_components/RelatedQuizzes';
 import PasswordDialog from '../../_components/PasswordDialog';
 import type { sessionType, userType } from '../../page';
 import { formatText } from '@/lib/formatText';
@@ -60,7 +59,6 @@ export default function MainSection({ quiz, author, authorQuizzes, recentUsers }
                         <div className="space-y-6">
                             <Recent users={recentUsers} plays={quiz.plays} />
                             <QuizStatistic createdAt={quiz.created_at} plays={quiz._count.plays} rating={rating} ratingCount={ratingCount} />
-                            <RelatedQuizzes difficulty={difficulty} />
                         </div>
                     </div>
                 </motion.div>
