@@ -56,10 +56,13 @@ export type useResultType = {
         color: string;
         bgColor: string;
     };
+    hasRated: boolean;
+    setHasRated: Dispatch<SetStateAction<boolean>>;
 };
 
-export function useResult(play: Play): useResultType {
+export function useResult(play: Play, rated: boolean): useResultType {
     const [ showDetail, setShowDetail ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
+    const [ hasRated, setHasRated ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(rated);
 
     const questionResults: Questions[] = play.play_details.map((detail) => {
         const isCorrect: boolean = detail.score > 0;
@@ -135,5 +138,7 @@ export function useResult(play: Play): useResultType {
         setShowDetail,
         results,
         performance,
+        hasRated,
+        setHasRated,
     };
 }

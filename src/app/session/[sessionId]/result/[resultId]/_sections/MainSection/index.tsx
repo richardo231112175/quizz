@@ -7,15 +7,17 @@ import Performance from '../../_components/Performance';
 import Insight from '../../_components/Insight';
 import ActionButtons from '../../_components/ActionButtons';
 import Detail from '../../_components/Detail';
+import Rating from '../../_components/Rating';
 import { type Play } from '../../page';
 import { useResult, type useResultType } from './hooks';
 
 type MainSectionProps = {
     play: Play;
+    rated: boolean;
 };
 
-export default function MainSection({ play }: MainSectionProps): JSX.Element {
-    const { showDetail, setShowDetail, results, performance }: useResultType = useResult(play);
+export default function MainSection({ play, rated }: MainSectionProps): JSX.Element {
+    const { showDetail, setShowDetail, results, performance, hasRated, setHasRated }: useResultType = useResult(play, rated);
 
     return (
         <div className="min-h-screen pt-24 pb-16">
@@ -53,6 +55,9 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                         level={performance.level}
                     />
                     {showDetail && <Detail questions={results.questionResults} />}
+                    {!hasRated && (
+                        <Rating onRatingSubmit={() => setHasRated(true)} />
+                    )}
                 </motion.div>
             </div>
         </div>
