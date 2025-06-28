@@ -7,7 +7,6 @@ export type useSessionSectionType = {
     setOpenConfirmDialog: Dispatch<SetStateAction<boolean>>;
     deletingIds: number[];
     setDeleteId: Dispatch<SetStateAction<number>>;
-    getStatus: (openTime: Date, closeTime: Date) => { status: string, className: string };
     deleteHandler: () => Promise<void>;
 };
 
@@ -20,18 +19,6 @@ export function useSessionSection({ sessions, setSessions }: useSessionSectionPr
     const [ openConfirmDialog, setOpenConfirmDialog ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
     const [ deleteId, setDeleteId ]: [ number, Dispatch<SetStateAction<number>> ] = useState(0);
     const [ deletingIds, setDeletingIds ]: [ number[], Dispatch<SetStateAction<number[]>> ] = useState<number[]>([]);
-
-    function getStatus(openTime: Date, closeTime: Date): { status: string, className: string } {
-        const now: Date = new Date();
-
-        if (now < openTime) {
-            return { status: 'Upcoming', className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' };
-        } else if (now > closeTime) {
-            return { status: 'Ended', className: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300' };
-        } else {
-            return { status: 'Active', className: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' };
-        }
-    }
 
     async function deleteHandler(): Promise<void> {
         if (deletingIds.includes(deleteId)) return;
@@ -50,7 +37,6 @@ export function useSessionSection({ sessions, setSessions }: useSessionSectionPr
         setOpenConfirmDialog,
         deletingIds,
         setDeleteId,
-        getStatus,
         deleteHandler,
     };
 }

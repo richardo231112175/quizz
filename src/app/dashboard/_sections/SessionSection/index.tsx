@@ -11,6 +11,8 @@ import { Button } from '@/components/Button';
 import DeleteConfirmDialog from '../../_components/DeleteConfirmDialog';
 import { difficulties } from '@/lib/difficulties';
 import { formatTime } from '@/lib/formatTime';
+import { formatText } from '@/lib/formatText';
+import { getStatus, type Status } from '@/lib/getStatus';
 import { useSessionSection, type useSessionSectionType } from './hooks';
 
 type SessionSectionProps = {
@@ -24,7 +26,6 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
         setOpenConfirmDialog,
         deletingIds,
         setDeleteId,
-        getStatus,
         deleteHandler,
     }: useSessionSectionType = useSessionSection({ sessions, setSessions });
 
@@ -33,9 +34,9 @@ export default function SessionSection({ sessions, setSessions }: SessionSection
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sessions.map((session) => {
-                const category: string = session.category[0] + session.category.substring(1, session.category.length).toLowerCase();
-                const difficulty: string = session.difficulty[0] + session.difficulty.substring(1, session.difficulty.length).toLowerCase();
-                const { status, className }: { status: string, className: string } = getStatus(session.open_time, session.close_time);
+                const category: string = formatText(session.category);
+                const difficulty: string = formatText(session.difficulty);
+                const { status, className }: Status = getStatus(session.open_time, session.close_time);
 
                 return (
                     <Card key={session.id}>
