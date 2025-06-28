@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { Button } from '@/components/Button';
 import { useShareButton, type useShareButtonType } from './hooks';
 
-export default function ShareButton(): JSX.Element {
+export function ShareButton(): JSX.Element {
     const { open, setOpen, handleShare }: useShareButtonType = useShareButton();
 
     return (
