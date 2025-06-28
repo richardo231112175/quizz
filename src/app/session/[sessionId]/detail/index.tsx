@@ -503,7 +503,7 @@ export default function SessionDetailsPage({ sessionData,playerData } :SessionPa
                                     </div>
                                     <div className="space-y-2">
                                         <Label>Time Limit (minutes)</Label>
-                                        <Input type="number" defaultValue={SESSION_DATA.timeLimit} />
+                                        <Input type="number" defaultValue={sessionData.time_limit} />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-4">
