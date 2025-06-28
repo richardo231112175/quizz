@@ -26,9 +26,12 @@ export type Play = {
         end_time: Date | null;
         question: {
             question: string;
+            image_url: string | null;
             max_score: number;
             type: 'SINGLE_CHOICE' | 'MULTIPLE_CHOICE' | 'OPEN_ENDED';
+            single_choice_options: string | null;
             single_choice_correct: string | null;
+            multiple_choice_options: string | null;
             multiple_choice_correct: string | null;
             open_ended_answer_key: string | null;
         };
@@ -69,9 +72,12 @@ export default async function QuizResultsPage({ params }: PageProps): Promise<JS
                     question: {
                         select: {
                             question: true,
+                            image_url: true,
                             max_score: true,
                             type: true,
+                            single_choice_options: true,
                             single_choice_correct: true,
+                            multiple_choice_options: true,
                             multiple_choice_correct: true,
                             open_ended_answer_key: true,
                         },

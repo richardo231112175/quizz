@@ -2,8 +2,8 @@ import type { JSX, Dispatch, SetStateAction } from 'react';
 import { TrendingUp, Download } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { ShareButton } from '@/components/ShareButton';
-import { formatTimeSpent } from '@/lib/formatTime';
 import { type QuizResults } from '../../_sections/MainSection/hooks';
+import { useActionButtons, type useActionButtonsType } from './hooks';
 
 type ActionButtonsProps = {
     showDetail: boolean;
@@ -13,32 +13,7 @@ type ActionButtonsProps = {
 };
 
 export default function ActionButtons({ showDetail, setShowDetail, results, level }: ActionButtonsProps): JSX.Element {
-    function handleDownload(): void {
-        const resultsText: string = `Quiz Results: ${results.quizTitle}
-
-Overall Performance:
-- Score: ${results.totalScore}/${results.maxPossibleScore} (${results.percentage}%)
-- Correct Answers: ${results.correctAnswers}/${results.totalQuestions}
-- Time Spent: ${formatTimeSpent(results.timeSpent)}
-- Performance Level: ${level}
-
-Detailed Results:
-${results.questionResults.map((result, index) => `
-Question ${index + 1}: ${result.question}
-Your Answer: ${Array.isArray(result.userAnswer) ? result.userAnswer.join(', ') : result.userAnswer}
-Correct Answer: ${Array.isArray(result.correctAnswer) ? result.correctAnswer.join(', ') : result.correctAnswer}
-Result: ${result.isCorrect ? 'Correct' : 'Incorrect'} (${result.score}/${result.maxScore} points)
-`).join('')}
-`;
-
-        const blob: Blob = new Blob([ resultsText ], { type: 'text/plain' });
-        const url: string = window.URL.createObjectURL(blob);
-        const a: HTMLAnchorElement = document.createElement('a');
-        a.href = url;
-        a.download = `${results.quizTitle.replace(/\s+/g, '_')}_results.txt`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-    };
+    const { handleDownload }: useActionButtonsType = useActionButtons(results, level);
 
     return (
         <div className="flex flex-wrap gap-3 justify-between mb-8">

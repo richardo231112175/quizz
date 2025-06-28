@@ -1,14 +1,40 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type Play } from '../../page';
 
-type QuestionResult = {
+type BaseQuestion = {
     question: string;
-    userAnswer: string | string[] | null;
-    correctAnswer: string | string[];
+    image: string | null;
+    maxScore: number;
     isCorrect: boolean;
     score: number;
-    maxScore: number;
+    timeTaken: number;
 };
+
+type SingleChoiceQuestion = {
+    type: 'single_choice';
+    options: string[];
+    answer: string | null;
+    correctAnswer: string;
+};
+
+type MultipleChoiceQuestion = {
+    type: 'multiple_choice';
+    options: string[];
+    answers: string[];
+    correctAnswers: string[];
+};
+
+type OpenEndedQuestion = {
+    type: 'open_ended';
+    answer: string | null;
+    correctAnswer: string;
+};
+
+export type SingleChoice = BaseQuestion & SingleChoiceQuestion;
+export type MultipleChoice = BaseQuestion & MultipleChoiceQuestion;
+export type OpenEnded = BaseQuestion & OpenEndedQuestion;
+
+export type Questions = SingleChoice | MultipleChoice | OpenEnded;
 
 export type QuizResults = {
     quizTitle: string;
@@ -18,7 +44,7 @@ export type QuizResults = {
     maxPossibleScore: number;
     percentage: number;
     timeSpent: number;
-    questionResults: QuestionResult[];
+    questionResults: Questions[];
 };
 
 export type useResultType = {
@@ -35,27 +61,42 @@ export type useResultType = {
 export function useResult(play: Play): useResultType {
     const [ showDetail, setShowDetail ]: [ boolean, Dispatch<SetStateAction<boolean>> ] = useState(false);
 
-    const questionResults: QuestionResult[] = play.play_details.map((detail) => {
-        const userAnswer: string | string[] | null = detail.answer
-            ? (detail.question.type === 'MULTIPLE_CHOICE' ? JSON.parse(detail.answer) : detail.answer)
-            : null;
-
-        const correctAnswer: string | string[] = detail.question.type === 'SINGLE_CHOICE'
-            ? detail.question.single_choice_correct!
-            : detail.question.type === 'MULTIPLE_CHOICE'
-                ? JSON.parse(detail.question.multiple_choice_correct!)
-                : detail.question.open_ended_answer_key!;
-
+    const questionResults: Questions[] = play.play_details.map((detail) => {
         const isCorrect: boolean = detail.score > 0;
 
-        return {
+        const baseQuestion: BaseQuestion = {
             question: detail.question.question,
-            userAnswer,
-            correctAnswer,
-            isCorrect,
-            score: detail.score,
+            image: detail.question.image_url,
             maxScore: detail.question.max_score,
+            isCorrect: isCorrect,
+            score: detail.score,
+            timeTaken: detail.time_taken,
         };
+
+        if (detail.question.type === 'SINGLE_CHOICE') {
+            return {
+                ...baseQuestion,
+                type: 'single_choice',
+                options: JSON.parse(detail.question.single_choice_options!) as string[],
+                answer: detail.answer,
+                correctAnswer: detail.question.single_choice_correct!,
+            };
+        } else if (detail.question.type === 'MULTIPLE_CHOICE') {
+            return {
+                ...baseQuestion,
+                type: 'multiple_choice',
+                options: JSON.parse(detail.question.multiple_choice_options!) as string[],
+                answers: detail.answer ? JSON.parse(detail.answer) as string[] : [],
+                correctAnswers: JSON.parse(detail.question.multiple_choice_correct!) as string[],
+            };
+        } else {
+            return {
+                ...baseQuestion,
+                type: 'open_ended',
+                answer: detail.answer,
+                correctAnswer: detail.answer!,
+            };
+        }
     });
 
     const totalQuestions: number = play.play_details.length;

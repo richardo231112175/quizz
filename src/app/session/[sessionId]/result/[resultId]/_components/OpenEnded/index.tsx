@@ -3,7 +3,7 @@ import { Flag } from 'lucide-react';
 import { Textarea } from '@/components/Textarea';
 
 type OpenEndedProps = {
-    answer: string;
+    answer: string | null;
     correctAnswer: string;
 };
 

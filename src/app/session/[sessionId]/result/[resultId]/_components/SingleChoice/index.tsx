@@ -3,7 +3,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 
 type SingleChoiceProps = {
     options: string[];
-    answer: string;
+    answer: string | null;
     correctAnswer: string;
 }
 

@@ -52,7 +52,7 @@ export default function MainSection({ play }: MainSectionProps): JSX.Element {
                         results={results}
                         level={performance.level}
                     />
-                    {showDetail && <Detail results={results} />}
+                    {showDetail && <Detail questions={results.questionResults} />}
                 </motion.div>
             </div>
         </div>
