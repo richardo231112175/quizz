@@ -18,7 +18,7 @@ export default function Hero({ quiz, difficulty, ratingCount, rating }: HeroProp
     return (
         <Card className="overflow-hidden">
             <div className="relative h-64 md:h-80">
-                <Image src={process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL! + quiz.image_url || ''} alt={quiz.title} className="object-cover" fill />
+                {quiz.image_url && <Image src={process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL! + quiz.image_url} alt={quiz.title} className="object-cover" fill />}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                     <div className="flex flex-wrap gap-2 mb-3">
