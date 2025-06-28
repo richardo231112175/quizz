@@ -123,7 +123,7 @@ export async function submitAnswer(id: number, answer: string | string[] | null)
         }
 
         const correctnessScore: number = await checkScoreCorrectness(question, answer);
-        const finalScore: number = correctnessScore * timeFactor * maxScore;
+        const finalScore: number = Math.round(correctnessScore * timeFactor * maxScore);
 
         await prisma.playDetail.update({
             where: { id },
